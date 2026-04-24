@@ -75,6 +75,9 @@ The schedule data is now available locally. Initial inspection found:
 - 4,214 schedule rows
 - columns: `작업이름`, `동기화 ID`, `작업 유형`, `계획된 시작 날짜`, `계획된 끝 날짜`
 - row order can be used as the first sequencing source
+- `동기화 ID` is a semantic group key, not a direct object GUID
+- DXTnavis-aware mapping currently matches 4,207 of 4,214 rows
+- high-confidence mapping covers 3,164 rows
 
 **Use it for**:
 
@@ -87,7 +90,13 @@ The schedule data is now available locally. Initial inspection found:
 **Minimum expected columns**:
 
 ```csv
-task_id,object_id,task_name,sequence,start_date,end_date,status
+작업이름,동기화 ID,작업 유형,계획된 시작 날짜,계획된 끝 날짜
+```
+
+For Unity import, derive a normalized mapping table with:
+
+```csv
+row_index,sync_id,method,confidence,object_ids,mesh_uris
 ```
 
 **Recommended additional columns**:
@@ -103,3 +112,4 @@ from_zone,to_zone,installer_type,predecessors,work_package,notes
 
 **Related plan**:
 - [Refinery installation simulation plan](../../plan/2026-04-24-refinery-installation-simulation-plan.md)
+- [DXTnavis ID logic review](../../analysis/2026-04-24-dxtnavis-id-logic-review.md)

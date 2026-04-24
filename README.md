@@ -19,6 +19,7 @@ This project does not target autonomous real-time site control.
 
 - [Implementation plan](docs/plan/2026-04-24-unity-construction-digital-twin-plan.md)
 - [Refinery installation simulation plan](docs/plan/2026-04-24-refinery-installation-simulation-plan.md)
+- [DXTnavis ID logic review](docs/analysis/2026-04-24-dxtnavis-id-logic-review.md)
 - [Project journal](docs/PROJECT-JOURNAL.md)
 - [Environment requirements](requirements/README.md)
 - [Asset registry](docs/reference/assets/ASSET-REGISTRY.md)
@@ -56,6 +57,13 @@ so they are tracked as a separate refinery sandbox and future 4D installation
 sequencing track rather than reconstruction evidence. See
 [ASSET-REGISTRY.md](docs/reference/assets/ASSET-REGISTRY.md) and the
 [refinery installation simulation plan](docs/plan/2026-04-24-refinery-installation-simulation-plan.md).
+
+Refinery schedule mapping preflight:
+
+```bash
+python3 scripts/inventory_refinery_dataset.py "$REALWORLD_REFINERY_ROOT"
+python3 scripts/map_refinery_schedule_to_assets.py "$REALWORLD_REFINERY_ROOT"
+```
 
 ## Initial Technology Direction
 

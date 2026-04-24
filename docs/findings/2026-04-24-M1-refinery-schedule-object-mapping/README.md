@@ -1,7 +1,7 @@
 # 2026-04-24 - M1 - Refinery Schedule IDs Do Not Directly Map to Geometry Objects
 
 **Severity**: Major
-**Status**: Open
+**Status**: Mitigated - Unity validation pending
 **Discovered by**: local dataset preflight
 **Affects**: Phase 6 refinery 4D installation playback
 
@@ -11,11 +11,11 @@
 
 The refinery schedule CSV contains 4,214 rows with a `동기화 ID` column, but
 those IDs do not directly match the geometry `ObjectId`, `DisplayName`, or
-`Category` fields. A naive hierarchy-prefix probe also did not find immediate
-matches.
+`Category` fields.
 
-This blocks direct schedule-to-GameObject control in Unity until a mapping
-strategy is defined.
+DXTnavis review showed that this is expected for group-level schedules:
+`동기화 ID` can be a composite group key, while actual object links are derived
+from hierarchy paths, SmartPlant properties, or a separate `ObjectIds` list.
 
 ## 2. Evidence
 
@@ -23,6 +23,32 @@ strategy is defined.
 
 ```bash
 python3 scripts/inventory_refinery_dataset.py "$REALWORLD_REFINERY_ROOT"
+```
+
+DXTnavis-aware mapping audit:
+
+```bash
+python3 scripts/map_refinery_schedule_to_assets.py "$REALWORLD_REFINERY_ROOT"
+```
+
+Observed relevant output:
+
+```json
+{
+  "coverage": {
+    "schedule_rows": 4214,
+    "matched_rows": 4207,
+    "unmatched_rows": 7,
+    "unique_mapped_object_ids": 12004,
+    "unique_mapped_mesh_uris": 8654
+  },
+  "confidence_counts": {
+    "high": 3164,
+    "medium": 933,
+    "low": 110,
+    "none": 7
+  }
+}
 ```
 
 Expected relevant output:
@@ -55,16 +81,22 @@ None yet.
 
 ### 3.1 Root Cause
 
-The schedule appears to be generated at a group/work-package level using values
-such as area, unit, discipline, sub-discipline, and group. The geometry files
-use object-level UUIDs and display/category names. These identifiers live at
-different semantic levels.
+The schedule is generated at a group/work-package level using values such as
+area, unit, discipline, sub-discipline, group, pipeline, and pipe run. The
+geometry files use object-level UUIDs and hierarchy records. These identifiers
+live at different semantic levels.
+
+DXTnavis confirmed the intended pattern:
+
+- object-level task: `SyncID` can be an object GUID
+- group-level task: `SyncID` is a composite key and the linked object IDs are a
+  separate collection
 
 ### 3.2 Impact
 
-The first Unity implementation needs a mapping layer before timeline playback.
-Without it, schedule rows cannot reliably hide/show/color/move the intended
-model objects.
+The first Unity implementation still needs a mapping import layer before
+timeline playback. The blocker is reduced from "no mapping strategy" to
+"validate mapping table and duplicate handling inside Unity."
 
 ### 3.3 Related Known Issues
 
@@ -86,23 +118,33 @@ model objects.
 
 ### 4.2 Selected Approach
 
-Start with Option 2 for automated mapping exploration and keep Option 3 as the
-fallback if automatic mapping is insufficient.
+Use Option 2. The repository now has a DXTnavis-aware mapping script that
+combines:
+
+- `unified.csv` hierarchy paths
+- `AllProperties_*.csv` `SmartPlant 3D|Pipeline` and `SmartPlant 3D|PipeRun`
+- display-name and equipment-name fallback
+- trailing `Unknown ...` group suffix trimming
 
 ### 4.3 Action Items
 
-- [ ] Parse `AllProperties_*.csv` for schedule-relevant fields.
-- [ ] Build a normalized object registry from `geometry.csv` and `unified.csv`.
+- [x] Parse `AllProperties_*.csv` for schedule-relevant fields.
+- [x] Build a normalized object registry from `geometry.csv` and `unified.csv`.
 - [ ] Convert/normalize schedule CSV from CP949 to UTF-8 in local artifacts.
-- [ ] Produce a mapping coverage report.
+- [x] Produce a mapping coverage report.
 - [ ] Select 10-50 mapped objects for the first Unity import test.
+- [ ] Validate duplicate assignment handling for wildcard group rows.
 
 ### 4.4 Resolution Commit
 
 Initial finding archived in 7b12d41fa2b4f3af9dc5cebcf82d0b34ca815d2b.
+Mitigation added after DXTnavis ID review.
 
 ## 5. References
 
 - Source script: `scripts/inventory_refinery_dataset.py`
+- Mapping script: `scripts/map_refinery_schedule_to_assets.py`
 - Analysis: `docs/analysis/2026-04-24-refinery-data-preflight.md`
+- DXTnavis ID review:
+  `docs/analysis/2026-04-24-dxtnavis-id-logic-review.md`
 - Plan: `docs/plan/2026-04-24-refinery-installation-simulation-plan.md`

@@ -16,4 +16,4 @@ Each finding should include:
 
 | Finding | Severity | Status | Date |
 |---------|----------|--------|------|
-| [M1 - Refinery schedule IDs do not directly map to geometry objects](2026-04-24-M1-refinery-schedule-object-mapping/) | Major | Open | 2026-04-24 |
+| [M1 - Refinery schedule IDs do not directly map to geometry objects](2026-04-24-M1-refinery-schedule-object-mapping/) | Major | Mitigated - Unity validation pending | 2026-04-24 |

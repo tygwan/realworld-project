@@ -1,8 +1,8 @@
 # Refinery Data Preflight
 
 **Date**: 2026-04-24
-**Status**: Initial inspection complete
-**Related**: D6, D7, M1
+**Status**: Initial inspection complete; DXTnavis-aware mapping added
+**Related**: D6, D7, M1, D9
 
 ---
 
@@ -66,7 +66,7 @@ Observed columns after CP949 decoding:
 The user said the dates can be ignored and the schedule can be used as order.
 That is a good MVP choice. Use row order or a derived sequence number first.
 
-## Initial Mapping Result
+## Initial Direct Mapping Result
 
 The schedule `동기화 ID` values do not directly match:
 
@@ -78,6 +78,37 @@ The schedule `동기화 ID` values do not directly match:
 This means Unity playback should not assume direct ID mapping. A mapping layer
 is required.
 
+## DXTnavis-Aware Mapping Result
+
+After reviewing `https://github.com/tygwan/DXTnavis.git`, the right
+interpretation is that `동기화 ID` can be a group key rather than an object ID.
+The new mapper combines hierarchy paths and SmartPlant `Pipeline::PipeRun`
+properties.
+
+Command:
+
+```bash
+python3 scripts/map_refinery_schedule_to_assets.py "$REALWORLD_REFINERY_ROOT"
+```
+
+Observed result:
+
+| Metric | Value |
+|--------|------:|
+| Schedule rows | 4,214 |
+| Matched rows | 4,207 |
+| Unmatched rows | 7 |
+| High-confidence rows | 3,164 |
+| Medium-confidence rows | 933 |
+| Low-confidence rows | 110 |
+| Unique mapped object IDs | 12,004 |
+| Unique mapped mesh URIs | 8,654 |
+
+The 933 medium-confidence rows include wildcard-style mappings where trailing
+`Unknown ...` schedule segments are interpreted as broad group suffixes. These
+are useful later, but they can overlap heavily and need duplicate handling in
+Unity.
+
 ## Recommended Next Step
 
 Do not start by manually importing all 8,656 GLB files into Unity.
@@ -86,7 +117,7 @@ First implement:
 
 1. a dataset preflight command
 2. a schedule normalization step that converts CP949 CSV to UTF-8
-3. a schedule-to-object mapping strategy
-4. a small Unity import test with 10-50 selected GLB objects
+3. a schedule-to-object mapping strategy - done for preflight
+4. a small Unity import test with 10-50 high-confidence GLB objects
 
 Only after that should the full Unity project setup begin.

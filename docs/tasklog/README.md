@@ -20,3 +20,4 @@ Each completed unit of work should use the 5-section format from
 | Refinery installation simulation planning | [2026-04-24-refinery-installation-simulation-planning.md](2026-04-24-refinery-installation-simulation-planning.md) | 2026-04-24 |
 | File management layout | [2026-04-24-file-management-layout.md](2026-04-24-file-management-layout.md) | 2026-04-24 |
 | Refinery data preflight | [2026-04-24-refinery-data-preflight.md](2026-04-24-refinery-data-preflight.md) | 2026-04-24 |
+| DXTnavis ID logic review | [2026-04-24-dxtnavis-id-logic-review.md](2026-04-24-dxtnavis-id-logic-review.md) | 2026-04-24 |
