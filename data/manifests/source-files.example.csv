@@ -1,4 +1,6 @@
 source_id,kind,local_env_var,relative_path,relationship,privacy,notes
 site_video_001,video,REALWORLD_SITE_VIDEO,,construction_site,private,First Phase 1 test video path goes in local .env or this relative path if approved.
-refinery_glb,glb,REALWORLD_REFINERY_GLB,,unrelated_refinery,private,Use for Phase 3/4 import and Phase 6/7 sequencing.
-refinery_schedule,csv,REALWORLD_REFINERY_SCHEDULE_CSV,,unrelated_refinery,private,Use for Phase 6/7 installation sequencing.
+refinery_root,directory,REALWORLD_REFINERY_ROOT,,unrelated_refinery,private,Root directory containing manifest geometry mesh schedule and fallback files.
+refinery_mesh_dir,directory,REALWORLD_REFINERY_GLB_DIR,,unrelated_refinery,private,Directory containing object-level GLB files.
+refinery_gap_fallback,fbx,REALWORLD_REFINERY_GAP_FALLBACK_FBX,,unrelated_refinery,private,Fallback FBX for portions not available as GLB.
+refinery_schedule,csv,REALWORLD_REFINERY_SCHEDULE_CSV,,unrelated_refinery,private,Use for Phase 6/7 installation sequencing; CP949 encoding.

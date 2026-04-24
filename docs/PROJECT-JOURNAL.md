@@ -10,7 +10,7 @@
 
 ## At a Glance
 
-- **Current phase**: Phase 0 - planning and technical validation
+- **Current phase**: Phase 0 - refinery data preflight and mapping validation
 - **Project goal**: Build a Unity environment from construction-site video and
   generated/derived 3D assets so a human can directly control a person/avatar
   and observe site conditions.
@@ -19,7 +19,8 @@
 - **Current artifact**:
   [implementation plan](plan/2026-04-24-unity-construction-digital-twin-plan.md)
 - **Open findings**: 0
-- **Next step**: validate the first pipeline slice on one short site video.
+- **Next step**: build refinery schedule-to-object mapping coverage before
+  Unity import.
 
 ---
 
@@ -29,7 +30,7 @@
 
 | ID | Date | Severity | Title | Status | Archive |
 |----|------|----------|-------|--------|---------|
-| — | — | — | No archived findings yet | — | — |
+| M1 | 2026-04-24 | Major | Refinery schedule IDs do not directly map to geometry objects | Open | [M1 archive](findings/2026-04-24-M1-refinery-schedule-object-mapping/) |
 
 ### Known Limitations
 
@@ -53,6 +54,7 @@
 | D5 | Treat the refinery GLB as an unrelated sandbox/import asset. | 2026-04-24 | [D5](#d5---treat-the-refinery-glb-as-an-unrelated-sandboximport-asset) |
 | D6 | Add a later refinery GLB + CSV 4D installation simulation track. | 2026-04-24 | [D6](#d6---add-a-later-refinery-glb--csv-4d-installation-simulation-track) |
 | D7 | Use a split control-plane/local-payload storage model. | 2026-04-24 | [D7](#d7---use-a-split-control-planelocal-payload-storage-model) |
+| D8 | Run refinery data preflight before Unity project setup. | 2026-04-24 | [D8](#d8---run-refinery-data-preflight-before-unity-project-setup) |
 
 ---
 
@@ -64,13 +66,21 @@
 2026-04-24   Added environment and asset management scaffold.             9d9a09c
 2026-04-24   Planned refinery GLB + CSV installation simulation track.    6d23276
 2026-04-24   Added data directory and Unity/WSL file management policy.   06b8b19
+2026-04-24   Inventoried local refinery GLB/CSV dataset and found M1.     pending
 ```
 
 ---
 
 ## 3. Findings
 
-No archived findings yet.
+### M1 - Refinery Schedule IDs Do Not Directly Map to Geometry Objects
+
+Initial preflight found that the schedule CSV's `동기화 ID` values do not
+directly match `geometry.csv` `ObjectId`, `DisplayName`, or `Category` values.
+Unity installation playback needs a mapping layer before it can control the
+right model objects.
+
+Archive: [findings/2026-04-24-M1-refinery-schedule-object-mapping/](findings/2026-04-24-M1-refinery-schedule-object-mapping/)
 
 ---
 
@@ -85,6 +95,7 @@ No archived findings yet.
 | D5 | Treat the refinery GLB as an unrelated sandbox/import asset. | 2026-04-24 | This section |
 | D6 | Add a later refinery GLB + CSV 4D installation simulation track. | 2026-04-24 | This section |
 | D7 | Use a split control-plane/local-payload storage model. | 2026-04-24 | This section |
+| D8 | Run refinery data preflight before Unity project setup. | 2026-04-24 | This section |
 
 ### D1 - Use AI/MCP/Coplay for Authoring, Not Runtime Control
 
@@ -357,6 +368,41 @@ stable source IDs from manifests.
 - [File management guide](reference/storage/FILE-MANAGEMENT.md)
 - [Data manifests](../data/manifests/README.md)
 
+### D8 - Run Refinery Data Preflight Before Unity Project Setup
+
+**Context**:
+The user placed refinery data under the local Windows data root. The dataset
+contains 8,656 GLB files, `gap_fallback.fbx`, `geometry.csv`, `manifest.json`,
+and a CP949-encoded schedule CSV with 4,214 rows. Importing all GLB files into
+Unity immediately would create performance and mapping risk.
+
+**Decision**:
+Do not start with full Unity import. First run refinery data preflight,
+normalize the schedule, derive schedule-to-object mapping coverage, and select
+a small mapped subset for the first Unity import test.
+
+**Rationale**:
+The first preflight found M1: schedule `동기화 ID` values do not directly match
+geometry object IDs. Unity playback depends on controlling the right
+GameObjects, so mapping has to be solved before scene setup.
+
+**Alternatives considered**:
+
+- Import all GLB files into Unity now: fast to try, but likely to be slow and
+  hard to debug.
+- Build mapping/preflight first: adds a short upfront step, but prevents Unity
+  scene churn.
+- Ask for more data immediately: may be needed later, but current files are
+  enough for automated mapping exploration.
+
+**Impact**:
+The next engineering task is a mapping coverage report, not Unity project
+creation. Unity setup should start with a small validated subset.
+
+**Related**:
+- [Refinery data preflight](analysis/2026-04-24-refinery-data-preflight.md)
+- [M1 finding](findings/2026-04-24-M1-refinery-schedule-object-mapping/)
+
 ---
 
 ## 5. External Dependencies
@@ -400,10 +446,11 @@ implementation.
 | Q5 | How should heavy machinery articulation be represented? | Affects rigging, colliders, and user-observed behavior. | Start with simplified articulated prefabs. |
 | Q6 | What is the local path and licensing/usage boundary of the refinery GLB? | Needed before import testing or committing derived assets. | Record in `.env` and asset registry when provided. |
 | Q7 | Which Unity version should be pinned? | Determines package compatibility and reproducibility. | Pin before creating the Unity project. |
-| Q8 | Does the refinery CSV contain stable object IDs that map to GLB nodes? | Determines whether schedule playback can control individual model objects. | Inspect when user provides data at Phase 6. |
+| Q8 | Does the refinery CSV contain stable object IDs that map to GLB nodes? | Determines whether schedule playback can control individual model objects. | Initial answer: not directly; see M1. Need mapping strategy. |
 | Q9 | Is the refinery GLB split into installable objects or merged into one mesh? | Determines whether Unity can animate individual installation steps. | Inspect GLB hierarchy before implementing Phase 6. |
 | Q10 | What Windows-native path should host the Unity clone/project? | Needed before creating the Unity project outside WSL. | Choose before Phase 3; example `C:\dev\realworld-project\unity`. |
-| Q11 | What local path holds the first Phase 1 test video? | Needed to start reconstruction spike. | User provides local path when ready. |
+| Q11 | What local path holds the first Phase 1 test video? | Needed to start construction-video reconstruction spike. | `video/` directory exists but is currently empty. |
+| Q12 | Which 10-50 refinery objects should be used for the first Unity import subset? | Needed to avoid importing 8,656 GLB files immediately. | Derive after mapping coverage report. |
 
 ---
 
@@ -418,6 +465,7 @@ implementation.
 | File management policy | [reference/storage/FILE-MANAGEMENT.md](reference/storage/FILE-MANAGEMENT.md) |
 | System tools | [reference/environment/system-tools.md](reference/environment/system-tools.md) |
 | User asset registry | [reference/assets/ASSET-REGISTRY.md](reference/assets/ASSET-REGISTRY.md) |
+| Refinery preflight analysis | [analysis/2026-04-24-refinery-data-preflight.md](analysis/2026-04-24-refinery-data-preflight.md) |
 | Design decisions | [§4 Decisions](#4-decisions) |
 | External dependency registry | [§5 External Dependencies](#5-external-dependencies) |
 | Task logs | [tasklog/](tasklog/) |

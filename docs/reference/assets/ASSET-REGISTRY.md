@@ -27,6 +27,14 @@ asset binaries to be committed.
 The user has a refinery facility `.glb` file. The model is not related to the
 physical location shown in the future construction-site video.
 
+Observed dataset metadata:
+
+- DXTnavis export: v1.4.0
+- Manifest object count: 12,009
+- Manifest mesh count: 8,656
+- GLB files under `mesh/`: 8,656
+- Fallback mesh file: `gap_fallback.fbx`
+
 **Use it for**:
 
 - GLB import pipeline validation
@@ -59,6 +67,14 @@ physical location shown in the future construction-site video.
 The user has a CSV that describes the installation order for the refinery
 model. The data will be provided when the project reaches the installation
 simulation stage.
+
+The schedule data is now available locally. Initial inspection found:
+
+- one current schedule CSV under `schedule/`
+- CP949 encoding
+- 4,214 schedule rows
+- columns: `작업이름`, `동기화 ID`, `작업 유형`, `계획된 시작 날짜`, `계획된 끝 날짜`
+- row order can be used as the first sequencing source
 
 **Use it for**:
 
