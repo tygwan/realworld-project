@@ -1,0 +1,19 @@
+# Task Log
+
+Phase/task completion records live here.
+
+Each completed unit of work should use the 5-section format from
+`dev-standards` R2:
+
+1. Language / content
+2. Problem
+3. Analysis
+4. Solution
+5. Result
+
+## Files
+
+| Task / Phase | File | Date |
+|--------------|------|------|
+| Initial planning scaffold | [2026-04-24-initial-planning-scaffold.md](2026-04-24-initial-planning-scaffold.md) | 2026-04-24 |
+
