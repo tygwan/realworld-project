@@ -261,4 +261,3 @@ This MVP is enough to validate whether the GLB and CSV are structurally usable.
 6. Implement Level 1 4D playback.
 7. Record data quality findings if mappings are missing or ambiguous.
 8. Decide whether Level 2 kinematic movement is feasible from available data.
-
