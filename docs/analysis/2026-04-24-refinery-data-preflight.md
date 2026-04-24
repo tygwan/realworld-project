@@ -90,4 +90,3 @@ First implement:
 4. a small Unity import test with 10-50 selected GLB objects
 
 Only after that should the full Unity project setup begin.
-
