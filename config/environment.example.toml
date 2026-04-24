@@ -47,3 +47,16 @@ relationship_to_site_video = "unrelated"
 intended_phase = "Phase 6/7"
 intended_use = "Installation order, task timeline, object mapping, and 4D sequencing simulation for the refinery sandbox."
 excluded_use = "Do not use for construction-site video reconstruction timing or geometry assumptions."
+
+[assets.refinery_unity_subset]
+enabled = false
+source_dir = ""
+windows_source_dir = ""
+manifest_path = ""
+max_meshes = 50
+copy_meshes = true
+commit_asset_to_git = false
+relationship_to_site_video = "unrelated"
+intended_phase = "Phase 3 import smoke test; Phase 6/7 schedule playback seed"
+intended_use = "Small high-confidence GLB/task subset for Unity import, scale/origin validation, hierarchy inspection, and schedule-driven visibility tests."
+excluded_use = "Do not treat as construction-site reconstruction evidence or as final full-refinery coverage."

@@ -21,3 +21,4 @@ Each completed unit of work should use the 5-section format from
 | File management layout | [2026-04-24-file-management-layout.md](2026-04-24-file-management-layout.md) | 2026-04-24 |
 | Refinery data preflight | [2026-04-24-refinery-data-preflight.md](2026-04-24-refinery-data-preflight.md) | 2026-04-24 |
 | DXTnavis ID logic review | [2026-04-24-dxtnavis-id-logic-review.md](2026-04-24-dxtnavis-id-logic-review.md) | 2026-04-24 |
+| Refinery Unity subset preparation | [2026-04-24-refinery-unity-subset-prep.md](2026-04-24-refinery-unity-subset-prep.md) | 2026-04-24 |

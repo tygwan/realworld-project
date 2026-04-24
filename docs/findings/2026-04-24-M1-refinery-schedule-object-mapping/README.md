@@ -132,7 +132,7 @@ combines:
 - [x] Build a normalized object registry from `geometry.csv` and `unified.csv`.
 - [ ] Convert/normalize schedule CSV from CP949 to UTF-8 in local artifacts.
 - [x] Produce a mapping coverage report.
-- [ ] Select 10-50 mapped objects for the first Unity import test.
+- [x] Select 10-50 mapped objects for the first Unity import test.
 - [ ] Validate duplicate assignment handling for wildcard group rows.
 
 ### 4.4 Resolution Commit

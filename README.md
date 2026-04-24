@@ -63,7 +63,16 @@ Refinery schedule mapping preflight:
 ```bash
 python3 scripts/inventory_refinery_dataset.py "$REALWORLD_REFINERY_ROOT"
 python3 scripts/map_refinery_schedule_to_assets.py "$REALWORLD_REFINERY_ROOT"
+python3 scripts/export_refinery_unity_subset.py \
+  "$REALWORLD_REFINERY_ROOT" \
+  --output-dir "$REALWORLD_REFINERY_ROOT/subsets/mvp_high_confidence_001" \
+  --max-meshes 50 \
+  --copy-meshes
 ```
+
+The current first Unity import target is the generated local subset
+`$REALWORLD_REFINERY_ROOT/subsets/mvp_high_confidence_001`, which contains 9
+schedule tasks and 50 copied GLB meshes.
 
 ## Initial Technology Direction
 

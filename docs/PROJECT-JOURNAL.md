@@ -10,17 +10,17 @@
 
 ## At a Glance
 
-- **Current phase**: Phase 0 - refinery data preflight and mapping validation
+- **Current phase**: Phase 0/3 bridge - refinery subset prepared for Unity import
 - **Project goal**: Build a Unity environment from construction-site video and
   generated/derived 3D assets so a human can directly control a person/avatar
   and observe site conditions.
 - **Runtime target**: Human-operated simulation/observation, not autonomous
   real-time safety control.
 - **Current artifact**:
-  [DXTnavis ID review](analysis/2026-04-24-dxtnavis-id-logic-review.md)
+  [Refinery Unity subset prep](analysis/2026-04-24-refinery-unity-subset-prep.md)
 - **Open findings**: 1 validation-pending mitigation
-- **Next step**: select a 10-50 object high-confidence refinery subset for the
-  first Unity import test.
+- **Next step**: create or open the Windows-native Unity project and import the
+  50-GLB high-confidence refinery subset.
 
 ---
 
@@ -56,6 +56,7 @@
 | D7 | Use a split control-plane/local-payload storage model. | 2026-04-24 | [D7](#d7---use-a-split-control-planelocal-payload-storage-model) |
 | D8 | Run refinery data preflight before Unity project setup. | 2026-04-24 | [D8](#d8---run-refinery-data-preflight-before-unity-project-setup) |
 | D9 | Treat refinery schedule `동기화 ID` as a semantic mapping key. | 2026-04-24 | [D9](#d9---treat-refinery-schedule-sync-id-as-a-semantic-mapping-key) |
+| D10 | Use a 50-GLB high-confidence refinery subset as the first Unity import target. | 2026-04-24 | [D10](#d10---use-a-50-glb-high-confidence-refinery-subset-as-the-first-unity-import-target) |
 
 ---
 
@@ -69,6 +70,7 @@
 2026-04-24   Added data directory and Unity/WSL file management policy.   06b8b19
 2026-04-24   Inventoried local refinery GLB/CSV dataset and found M1.     7b12d41
 2026-04-24   Reviewed DXTnavis ID logic and added mapping coverage script. d7c85a7
+2026-04-24   Generated 50-GLB high-confidence Unity import subset.         TBD
 ```
 
 ---
@@ -83,7 +85,8 @@ DXTnavis review showed that this is expected for group-level schedules.
 
 The mitigation script maps 4,207 of 4,214 schedule rows by combining
 `unified.csv` hierarchy paths, SmartPlant `Pipeline::PipeRun` properties, and
-bounded fallback rules. Unity validation and duplicate handling are still
+bounded fallback rules. A 9-task / 50-GLB high-confidence subset now exists for
+the first Unity import test. Unity validation and duplicate handling are still
 pending.
 
 Archive: [findings/2026-04-24-M1-refinery-schedule-object-mapping/](findings/2026-04-24-M1-refinery-schedule-object-mapping/)
@@ -103,6 +106,7 @@ Archive: [findings/2026-04-24-M1-refinery-schedule-object-mapping/](findings/202
 | D7 | Use a split control-plane/local-payload storage model. | 2026-04-24 | This section |
 | D8 | Run refinery data preflight before Unity project setup. | 2026-04-24 | This section |
 | D9 | Treat refinery schedule `동기화 ID` as a semantic mapping key. | 2026-04-24 | This section |
+| D10 | Use a 50-GLB high-confidence refinery subset as the first Unity import target. | 2026-04-24 | This section |
 
 ### D1 - Use AI/MCP/Coplay for Authoring, Not Runtime Control
 
@@ -450,6 +454,45 @@ medium-confidence wildcard groups until duplicate-assignment handling exists.
 - [DXTnavis ID review](analysis/2026-04-24-dxtnavis-id-logic-review.md)
 - [M1 finding](findings/2026-04-24-M1-refinery-schedule-object-mapping/)
 
+### D10 - Use a 50-GLB High-Confidence Refinery Subset as the First Unity Import Target
+
+**Context**:
+The refinery dataset contains 8,656 GLB files. Full import is the wrong first
+Unity action because unresolved hierarchy, material, scale, and schedule
+mapping issues would be hard to isolate at that size.
+
+**Decision**:
+Use `mvp_high_confidence_001`, a generated 9-task / 50-GLB subset, as the first
+Unity import target. The subset is generated from high-confidence mapping rows
+only and is stored as a local payload under:
+
+```text
+$REALWORLD_REFINERY_ROOT/subsets/mvp_high_confidence_001/
+```
+
+**Rationale**:
+The subset is small enough to inspect manually in Unity while still preserving
+the real schedule-to-object-to-mesh chain needed for later installation
+playback. It excludes wildcard mappings until duplicate-assignment handling
+exists.
+
+**Alternatives considered**:
+
+- Import all 8,656 GLBs now: faster to start, but high risk of slow imports and
+  hard-to-debug schedule issues.
+- Use a manually chosen visual-only sample: easy to inspect, but it would not
+  validate schedule linkage.
+- Generate a high-confidence mapped subset: balanced path for import and
+  playback validation.
+
+**Impact**:
+The next implementation step is Unity project creation/opening, glTF/GLB import
+setup, and a smoke-test scene that reads `unity_subset_manifest.json`.
+
+**Related**:
+- [Refinery Unity subset prep](analysis/2026-04-24-refinery-unity-subset-prep.md)
+- [Asset registry](reference/assets/ASSET-REGISTRY.md)
+
 ---
 
 ## 5. External Dependencies
@@ -477,9 +520,10 @@ implementation.
 | Hunyuan3D 2.1 | Generative 3D asset candidate | https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1 | Candidate | Unpinned |
 | Stable Fast 3D | Fast image-to-3D candidate | https://github.com/Stability-AI/stable-fast-3d | Candidate | Unpinned |
 | Blender | Mesh cleanup, rig/proxy preparation | https://www.blender.org | Required tool candidate | Unpinned |
-| Unity | Interactive environment and physics runtime | https://unity.com | Required platform | Version TBD |
-| User-provided refinery GLB | Unrelated industrial model for import/proxy sandbox validation | Local path TBD; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available from user; not yet linked into repo | Do not commit by default |
-| User-provided refinery installation CSV | Unrelated process plan for refinery 4D installation sequencing | Local path TBD; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available from user later; not yet linked into repo | Do not commit by default |
+| Unity | Interactive environment and physics runtime | https://unity.com | Required platform; local install observed | `6000.3.4f1` observed locally |
+| Unity glTFast | GLB/glTF import candidate for Unity subset | https://docs.unity3d.com/Packages/com.unity.cloud.gltfast@6.14/manual/index.html | Candidate package; Unity release notes list `6.14.1` with 6000.3.4f1 | Pin in Unity `Packages/manifest.json` |
+| User-provided refinery GLB | Unrelated industrial model for import/proxy sandbox validation | Local path in `.env`; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available locally; subset generated | Do not commit by default |
+| User-provided refinery installation CSV | Unrelated process plan for refinery 4D installation sequencing | Local path in `.env`; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available locally; subset generated | Do not commit by default |
 
 ---
 
@@ -492,13 +536,13 @@ implementation.
 | Q3 | What is the privacy boundary for construction-site video and generated frames? | Determines whether cloud tools can be used. | Default to local/offline until user approves otherwise. |
 | Q4 | What minimum fidelity is required for manual observation? | Determines reconstruction quality targets and proxy simplification. | Define MVP acceptance criteria in Phase 1. |
 | Q5 | How should heavy machinery articulation be represented? | Affects rigging, colliders, and user-observed behavior. | Start with simplified articulated prefabs. |
-| Q6 | What is the local path and licensing/usage boundary of the refinery GLB? | Needed before import testing or committing derived assets. | Record in `.env` and asset registry when provided. |
-| Q7 | Which Unity version should be pinned? | Determines package compatibility and reproducibility. | Pin before creating the Unity project. |
+| Q6 | What is the local path and licensing/usage boundary of the refinery GLB? | Needed before import testing or committing derived assets. | Local path is recorded in `.env`; licensing/commit approval still pending. |
+| Q7 | Which Unity version should be pinned? | Determines package compatibility and reproducibility. | Unity `6000.3.4f1` observed locally; pin in Unity project files once created. |
 | Q8 | Does the refinery CSV contain stable object IDs that map to GLB nodes? | Determines whether schedule playback can control individual model objects. | Not direct IDs; DXTnavis-aware semantic mapping now covers 4,207/4,214 rows. |
 | Q9 | Is the refinery GLB split into installable objects or merged into one mesh? | Determines whether Unity can animate individual installation steps. | Inspect GLB hierarchy before implementing Phase 6. |
 | Q10 | What Windows-native path should host the Unity clone/project? | Needed before creating the Unity project outside WSL. | Choose before Phase 3; example `C:\dev\realworld-project\unity`. |
 | Q11 | What local path holds the first Phase 1 test video? | Needed to start construction-video reconstruction spike. | `video/` directory exists but is currently empty. |
-| Q12 | Which 10-50 refinery objects should be used for the first Unity import subset? | Needed to avoid importing 8,656 GLB files immediately. | Use high-confidence rows from `map_refinery_schedule_to_assets.py`; final subset selection pending. |
+| Q12 | Which 10-50 refinery objects should be used for the first Unity import subset? | Needed to avoid importing 8,656 GLB files immediately. | Answered by `mvp_high_confidence_001`: 9 tasks, 50 object IDs, 50 GLB meshes. |
 
 ---
 
@@ -515,6 +559,7 @@ implementation.
 | User asset registry | [reference/assets/ASSET-REGISTRY.md](reference/assets/ASSET-REGISTRY.md) |
 | Refinery preflight analysis | [analysis/2026-04-24-refinery-data-preflight.md](analysis/2026-04-24-refinery-data-preflight.md) |
 | DXTnavis ID logic review | [analysis/2026-04-24-dxtnavis-id-logic-review.md](analysis/2026-04-24-dxtnavis-id-logic-review.md) |
+| Refinery Unity subset prep | [analysis/2026-04-24-refinery-unity-subset-prep.md](analysis/2026-04-24-refinery-unity-subset-prep.md) |
 | Design decisions | [§4 Decisions](#4-decisions) |
 | External dependency registry | [§5 External Dependencies](#5-external-dependencies) |
 | Task logs | [tasklog/](tasklog/) |

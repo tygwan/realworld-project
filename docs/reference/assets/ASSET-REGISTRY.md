@@ -20,6 +20,7 @@ asset binaries to be committed.
 |----|-------|------|----------------------------|------------|--------------|-------|
 | A1 | User-provided refinery facility model | `.glb` | Unrelated to provided construction-site video | Do not commit by default | Validate GLB import, materials, scale/origin handling, collider proxy generation, separate refinery sandbox scene, and later 4D installation sequencing | Phase 3/4 and Phase 6/7 |
 | A2 | User-provided refinery installation process plan | `.csv` | Unrelated to provided construction-site video | Do not commit by default until approved | Drives object installation order, task timeline, and schedule playback for the refinery sandbox | Phase 6/7 |
+| A3 | Generated refinery Unity MVP subset | `.json`, `.csv`, `.glb` copy set | Unrelated to provided construction-site video | Do not commit payload by default | First Unity import smoke test with 9 schedule tasks and 50 GLB meshes | Phase 3 and Phase 6 seed |
 
 ## A1 - User-Provided Refinery Facility GLB
 
@@ -113,3 +114,41 @@ from_zone,to_zone,installer_type,predecessors,work_package,notes
 **Related plan**:
 - [Refinery installation simulation plan](../../plan/2026-04-24-refinery-installation-simulation-plan.md)
 - [DXTnavis ID logic review](../../analysis/2026-04-24-dxtnavis-id-logic-review.md)
+
+## A3 - Generated Refinery Unity MVP Subset
+
+**Known context**:
+The subset is generated from A1 and A2 using the DXTnavis-aware mapping script.
+It is a local derivative payload, not a committed source asset.
+
+Default local locations:
+
+```text
+artifacts/refinery/unity_subsets/mvp_high_confidence_001/
+$REALWORLD_REFINERY_ROOT/subsets/mvp_high_confidence_001/
+```
+
+Observed subset metadata:
+
+- task count: 9
+- unique object IDs: 50
+- unique mesh URIs: 50
+- copied meshes: 50
+- missing meshes: 0
+- selection confidence: high only
+
+**Use it for**:
+
+- first Unity GLB import smoke test
+- scale/origin and material handling validation
+- schedule-driven visibility or install-state prototype
+- GameObject metadata strategy for refinery object IDs
+
+**Do not use it for**:
+
+- construction-site video reconstruction evidence
+- final full-refinery coverage claims
+- testing medium-confidence wildcard schedule mappings
+
+**Related analysis**:
+- [Refinery Unity subset preparation](../../analysis/2026-04-24-refinery-unity-subset-prep.md)

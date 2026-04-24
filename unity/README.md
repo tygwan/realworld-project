@@ -27,6 +27,25 @@ Windows clone:
 Sync between the two clones through git. Keep large private data outside git and
 reference it via `.env` paths.
 
+## First Import Target
+
+Before importing the full refinery dataset, use the generated MVP subset:
+
+```text
+$REALWORLD_REFINERY_ROOT/subsets/mvp_high_confidence_001/
+```
+
+That folder contains `unity_subset_manifest.json`, `subset_tasks.csv`, and 50
+copied GLB files under `mesh/`. The matching repo-local artifact path is:
+
+```text
+artifacts/refinery/unity_subsets/mvp_high_confidence_001/
+```
+
+Local inspection found Unity `6000.3.4f1` installed. Start with Unity glTFast
+for GLB import and pin the package in `unity/Packages/manifest.json` once the
+Unity project exists.
+
 ## Tracked vs Ignored
 
 When the Unity project is created, track:

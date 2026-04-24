@@ -104,8 +104,8 @@ schedule row -> sync key -> mapping method -> object ids -> mesh uris
 ```
 
 The first Unity sandbox should use only high-confidence rows with a small mesh
-count. Good candidates are early `Pipeline::PipeRun` rows because they map
-cleanly through SmartPlant properties and contain manageable object sets.
+count. That subset is now generated as `mvp_high_confidence_001` and contains
+9 schedule tasks mapped to 50 copied GLB files.
 
 The medium-confidence wildcard rows can be useful later for broad group
 visibility or coloring, but they can overlap heavily. They should not be used as

@@ -118,6 +118,7 @@ First implement:
 1. a dataset preflight command
 2. a schedule normalization step that converts CP949 CSV to UTF-8
 3. a schedule-to-object mapping strategy - done for preflight
-4. a small Unity import test with 10-50 high-confidence GLB objects
+4. a small Unity import test with 10-50 high-confidence GLB objects - subset
+   generated as `mvp_high_confidence_001`
 
 Only after that should the full Unity project setup begin.
