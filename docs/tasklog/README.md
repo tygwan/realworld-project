@@ -18,3 +18,4 @@ Each completed unit of work should use the 5-section format from
 | Initial planning scaffold | [2026-04-24-initial-planning-scaffold.md](2026-04-24-initial-planning-scaffold.md) | 2026-04-24 |
 | Environment and asset management scaffold | [2026-04-24-environment-asset-management.md](2026-04-24-environment-asset-management.md) | 2026-04-24 |
 | Refinery installation simulation planning | [2026-04-24-refinery-installation-simulation-planning.md](2026-04-24-refinery-installation-simulation-planning.md) | 2026-04-24 |
+| File management layout | [2026-04-24-file-management-layout.md](2026-04-24-file-management-layout.md) | 2026-04-24 |

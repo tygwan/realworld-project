@@ -12,7 +12,10 @@ frame_dir = "data/interim/frames"
 mask_dir = "data/interim/masks"
 reconstruction_dir = "artifacts/reconstruction"
 unity_project_dir = "unity"
+unity_project_windows_dir = ""
 asset_dir = "assets"
+capture_dir = "captures"
+export_dir = "exports"
 
 [tools]
 python = ">=3.11"

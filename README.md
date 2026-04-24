@@ -22,6 +22,7 @@ This project does not target autonomous real-time site control.
 - [Project journal](docs/PROJECT-JOURNAL.md)
 - [Environment requirements](requirements/README.md)
 - [Asset registry](docs/reference/assets/ASSET-REGISTRY.md)
+- [File management](docs/reference/storage/FILE-MANAGEMENT.md)
 
 ## Setup Baseline
 

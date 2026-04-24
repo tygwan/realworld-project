@@ -24,6 +24,7 @@ documents.
 - [Environment requirements](../requirements/README.md)
 - [System tools registry](reference/environment/system-tools.md)
 - [Asset registry](reference/assets/ASSET-REGISTRY.md)
+- [File management and workspace layout](reference/storage/FILE-MANAGEMENT.md)
 
 ## Update Rules
 

@@ -21,12 +21,26 @@ build/
 dist/
 out/
 target/
-Library/
-Temp/
-Obj/
-Logs/
-UserSettings/
-MemoryCaptures/
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emory[Cc]aptures/
+Recordings/
+.gradle/
+*.csproj
+*.sln
+*.user
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
 
 # Logs
 *.log
@@ -62,17 +76,42 @@ venv/
 .ruff_cache/
 .mypy_cache/
 
-# Large local data and generated reconstruction artifacts
-data/raw/
-data/interim/
-data/processed/
-artifacts/
-exports/
-captures/
+# Large local data and generated reconstruction artifacts.
+# Keep directory READMEs/manifests in git, keep payloads local.
+data/raw/**
+!data/raw/
+!data/raw/README.md
+!data/raw/.gitkeep
+data/interim/**
+!data/interim/
+!data/interim/README.md
+!data/interim/.gitkeep
+data/processed/**
+!data/processed/
+!data/processed/README.md
+!data/processed/.gitkeep
+artifacts/**
+!artifacts/
+!artifacts/README.md
+!artifacts/.gitkeep
+exports/**
+!exports/
+!exports/README.md
+!exports/.gitkeep
+captures/**
+!captures/
+!captures/README.md
+!captures/.gitkeep
 
 # User-provided/private assets stay local unless explicitly approved.
-assets/private/
-assets/user-provided/
+assets/private/**
+!assets/private/
+!assets/private/README.md
+!assets/private/.gitkeep
+assets/user-provided/**
+!assets/user-provided/
+!assets/user-provided/README.md
+!assets/user-provided/.gitkeep
 
 # Common large local media/model files.
 *.mp4
@@ -81,6 +120,12 @@ assets/user-provided/
 *.avi
 *.ply
 *.splat
+*.glb
+*.gltf
+*.fbx
+*.obj
+*.usd
+*.usdz
 *.ckpt
 *.safetensors
 *.pth

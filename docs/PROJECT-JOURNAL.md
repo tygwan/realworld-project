@@ -40,6 +40,7 @@
 | L3 | MCP/Coplay tooling is suitable for authoring, not high-frequency runtime control. | Keep runtime behavior inside Unity scripts and explicit simulation components. | Accepted |
 | L4 | The user-provided refinery GLB is unrelated to the construction-site video location. | Use it only for import/proxy sandbox work, not as reconstruction evidence. | Accepted |
 | L5 | The refinery installation CSV is unrelated to the construction-site video location. | Use it only for the refinery 4D installation sandbox, not as timing evidence for the video site. | Accepted |
+| L6 | Unity may run from Windows while the current repo is in WSL. | Prefer a Windows-native clone for Unity and sync through git; keep large data local. | Accepted |
 
 ### Design Decisions
 
@@ -51,6 +52,7 @@
 | D4 | Manage environments as layered requirements and registries. | 2026-04-24 | [D4](#d4---manage-environments-as-layered-requirements-and-registries) |
 | D5 | Treat the refinery GLB as an unrelated sandbox/import asset. | 2026-04-24 | [D5](#d5---treat-the-refinery-glb-as-an-unrelated-sandboximport-asset) |
 | D6 | Add a later refinery GLB + CSV 4D installation simulation track. | 2026-04-24 | [D6](#d6---add-a-later-refinery-glb--csv-4d-installation-simulation-track) |
+| D7 | Use a split control-plane/local-payload storage model. | 2026-04-24 | [D7](#d7---use-a-split-control-planelocal-payload-storage-model) |
 
 ---
 
@@ -61,6 +63,7 @@
 2026-04-24   Recorded initial Unity reconstruction/observation plan.     ae68a05
 2026-04-24   Added environment and asset management scaffold.             9d9a09c
 2026-04-24   Planned refinery GLB + CSV installation simulation track.    6d23276
+2026-04-24   Added data directory and Unity/WSL file management policy.   pending
 ```
 
 ---
@@ -81,6 +84,7 @@ No archived findings yet.
 | D4 | Manage environments as layered requirements and registries. | 2026-04-24 | This section |
 | D5 | Treat the refinery GLB as an unrelated sandbox/import asset. | 2026-04-24 | This section |
 | D6 | Add a later refinery GLB + CSV 4D installation simulation track. | 2026-04-24 | This section |
+| D7 | Use a split control-plane/local-payload storage model. | 2026-04-24 | This section |
 
 ### D1 - Use AI/MCP/Coplay for Authoring, Not Runtime Control
 
@@ -310,6 +314,49 @@ and CSV schema, then create or derive an object mapping.
 - [Refinery installation simulation plan](plan/2026-04-24-refinery-installation-simulation-plan.md)
 - [Asset registry](reference/assets/ASSET-REGISTRY.md)
 
+### D7 - Use a Split Control-Plane/Local-Payload Storage Model
+
+**Context**:
+The project needs to manage raw videos, extracted frames, reconstruction
+artifacts, private GLB/CSV assets, Unity project files, and Unity-generated
+caches. The current repository lives in WSL, while Unity Editor will likely run
+from Windows.
+
+**Decision**:
+Use the git repository as the control plane: docs, scripts, manifests, config
+examples, and eventually Unity project settings/scripts. Keep heavy or private
+payloads local by default and reference them through `.env`, manifests, and
+asset registries.
+
+For Windows Unity, prefer a Windows-native clone of the same repository and
+create the Unity project under `unity/` in that Windows clone. Sync WSL and
+Windows work through git. Opening a Unity project directly from a WSL path is
+allowed only as a quick smoke-test path.
+
+**Rationale**:
+This avoids committing private data and avoids Unity file-watcher/performance
+issues caused by working directly across the WSL/Windows filesystem boundary.
+It also keeps all local-only files discoverable through manifests instead of
+hardcoded machine paths.
+
+**Alternatives considered**:
+
+- Put all data and Unity payloads in git: simple to find, but too large and
+  unsafe for private videos/assets.
+- Keep everything in WSL and open Unity through `\\wsl$`: simple for one repo,
+  but risky for Unity performance and file watching.
+- Split control files from local payloads and use a Windows-native Unity clone:
+  slightly more operational discipline, but robust across environments.
+
+**Impact**:
+The repo now tracks directory READMEs and example manifests while ignoring
+payloads. Future scripts should read paths from config or `.env` and should use
+stable source IDs from manifests.
+
+**Related**:
+- [File management guide](reference/storage/FILE-MANAGEMENT.md)
+- [Data manifests](../data/manifests/README.md)
+
 ---
 
 ## 5. External Dependencies
@@ -355,6 +402,8 @@ implementation.
 | Q7 | Which Unity version should be pinned? | Determines package compatibility and reproducibility. | Pin before creating the Unity project. |
 | Q8 | Does the refinery CSV contain stable object IDs that map to GLB nodes? | Determines whether schedule playback can control individual model objects. | Inspect when user provides data at Phase 6. |
 | Q9 | Is the refinery GLB split into installable objects or merged into one mesh? | Determines whether Unity can animate individual installation steps. | Inspect GLB hierarchy before implementing Phase 6. |
+| Q10 | What Windows-native path should host the Unity clone/project? | Needed before creating the Unity project outside WSL. | Choose before Phase 3; example `C:\dev\realworld-project\unity`. |
+| Q11 | What local path holds the first Phase 1 test video? | Needed to start reconstruction spike. | User provides local path when ready. |
 
 ---
 
@@ -366,6 +415,7 @@ implementation.
 | Current implementation plan | [plan/2026-04-24-unity-construction-digital-twin-plan.md](plan/2026-04-24-unity-construction-digital-twin-plan.md) |
 | Refinery installation plan | [plan/2026-04-24-refinery-installation-simulation-plan.md](plan/2026-04-24-refinery-installation-simulation-plan.md) |
 | Environment requirements | [../requirements/README.md](../requirements/README.md) |
+| File management policy | [reference/storage/FILE-MANAGEMENT.md](reference/storage/FILE-MANAGEMENT.md) |
 | System tools | [reference/environment/system-tools.md](reference/environment/system-tools.md) |
 | User asset registry | [reference/assets/ASSET-REGISTRY.md](reference/assets/ASSET-REGISTRY.md) |
 | Design decisions | [§4 Decisions](#4-decisions) |
