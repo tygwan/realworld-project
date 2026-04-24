@@ -1,3 +1,2 @@
 run_id,phase,input_source_id,tool,tool_version,output_dir,status,notes
 run_001,phase_1,site_video_001,TBD,TBD,artifacts/reconstruction/run_001,planned,Record reconstruction experiments here.
-

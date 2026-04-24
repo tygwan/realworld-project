@@ -13,4 +13,3 @@ data/interim/camera/
 
 Payloads are ignored by git because frame extraction and model outputs can be
 large.
-

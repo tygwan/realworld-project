@@ -105,4 +105,3 @@ Only commit binary assets when all are true:
 - the decision is recorded in `docs/PROJECT-JOURNAL.md`
 
 Otherwise, keep the file local and track only metadata.
-

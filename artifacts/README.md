@@ -13,4 +13,3 @@ artifacts/reports/
 
 Payloads are ignored by git by default. Record important outputs in
 `data/manifests/pipeline-runs.example.csv` or a project-specific manifest.
-

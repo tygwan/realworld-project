@@ -44,4 +44,3 @@ Do not track:
 - `Logs/`
 - `UserSettings/`
 - large private imported assets unless explicitly approved
-

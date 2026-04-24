@@ -20,4 +20,3 @@ git. Keep metadata, manifests, and small examples in the repository.
 - Record local file existence in manifests or asset registry instead.
 - Use stable IDs in manifests so scripts can refer to data without hardcoded
   machine-specific paths.
-

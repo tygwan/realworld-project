@@ -11,4 +11,3 @@ data/raw/refinery/
 
 Payloads are ignored by git. Track source metadata in
 `data/manifests/source-files.example.csv` or project-specific manifests.
-

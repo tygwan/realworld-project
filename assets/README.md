@@ -16,4 +16,3 @@ assets/public/
 
 Only commit assets when their license, privacy boundary, and file size are
 explicitly acceptable.
-
