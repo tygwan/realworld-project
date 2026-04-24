@@ -60,7 +60,7 @@
 2026-04-24   Initialized planning scaffold with dev-standards@0.5.0.   ae68a05
 2026-04-24   Recorded initial Unity reconstruction/observation plan.     ae68a05
 2026-04-24   Added environment and asset management scaffold.             9d9a09c
-2026-04-24   Planned refinery GLB + CSV installation simulation track.    pending
+2026-04-24   Planned refinery GLB + CSV installation simulation track.    6d23276
 ```
 
 ---

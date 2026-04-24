@@ -2,7 +2,7 @@
 
 **Date**: 2026-04-24
 **Task**: Phase 0 refinery installation sequencing planning
-**Commit**: pending
+**Commit**: 6d23276099c31b93d662e17f198b34d2582e8112
 
 ---
 
@@ -46,4 +46,7 @@ and CSV must not be used as evidence for the video reconstruction track.
   simulation track.
 - The user can provide the GLB/CSV when Phase 6 starts, or provide the GLB
   earlier for Phase 3 import testing.
-- Commit hash pending.
+- Refinery installation planning commit:
+  6d23276099c31b93d662e17f198b34d2582e8112
+- Commit hash metadata recorded in a follow-up documentation commit because a
+  git commit cannot contain its own final hash before it exists.
