@@ -63,7 +63,7 @@
 2026-04-24   Recorded initial Unity reconstruction/observation plan.     ae68a05
 2026-04-24   Added environment and asset management scaffold.             9d9a09c
 2026-04-24   Planned refinery GLB + CSV installation simulation track.    6d23276
-2026-04-24   Added data directory and Unity/WSL file management policy.   pending
+2026-04-24   Added data directory and Unity/WSL file management policy.   06b8b19
 ```
 
 ---

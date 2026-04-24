@@ -2,7 +2,7 @@
 
 **Date**: 2026-04-24
 **Task**: Phase 0 file storage and Unity workspace management
-**Commit**: pending
+**Commit**: 06b8b19719aa2f133ddd090d53e4abee18c7d3bb
 
 ---
 
@@ -44,5 +44,6 @@ allowing documentation and metadata to be tracked.
   defined.
 - Large/private payloads remain ignored by default.
 - Unity/WSL management strategy is documented.
-- Commit hash pending.
-
+- File management layout commit: 06b8b19719aa2f133ddd090d53e4abee18c7d3bb
+- Commit hash metadata recorded in a follow-up documentation commit because a
+  git commit cannot contain its own final hash before it exists.
