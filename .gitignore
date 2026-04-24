@@ -33,6 +33,7 @@ Recordings/
 .gradle/
 *.csproj
 *.sln
+*.slnx
 *.user
 *.pidb
 *.booproj
