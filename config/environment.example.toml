@@ -29,4 +29,3 @@ relationship_to_site_video = "unrelated"
 intended_phase = "Phase 3/4"
 intended_use = "Import pipeline, scale/origin validation, GLB material checks, collider proxy generation, and refinery-specific sandbox scene."
 excluded_use = "Do not use as geometry evidence for the construction-site video reconstruction."
-

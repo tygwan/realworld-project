@@ -13,4 +13,3 @@ Local machine-specific paths may be supplied through `.env` using
 - Record the existence, role, and phase usage of user assets in the asset
   registry even when the asset itself is not committed.
 - Promote repeated manual settings into this config once they become stable.
-

@@ -1,6 +1,6 @@
 # Asset Registry
 
-**Status**: Draft  
+**Status**: Draft
 **Last updated**: 2026-04-24
 
 This registry tracks user-provided and generated assets without requiring the
@@ -49,4 +49,3 @@ physical location shown in the future construction-site video.
   large industrial facility navigation tests.
 - Optional later branch: create a refinery-specific scenario track if the
   project expands beyond the construction-site video.
-

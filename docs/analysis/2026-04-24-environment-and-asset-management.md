@@ -1,7 +1,7 @@
 # Environment and Asset Management Analysis
 
-**Date**: 2026-04-24  
-**Status**: Accepted initial direction  
+**Date**: 2026-04-24
+**Status**: Accepted initial direction
 **Related decisions**: D4, D5
 
 ---
@@ -74,4 +74,3 @@ Recommended sequence:
 
 The key boundary: it must not be mixed into the construction-site reconstruction
 as if it represents the same place.
-

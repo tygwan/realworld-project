@@ -1,6 +1,6 @@
 # System Tools Registry
 
-**Status**: Draft  
+**Status**: Draft
 **Last updated**: 2026-04-24
 
 This file tracks tools that are not managed by `pip`.
@@ -21,4 +21,3 @@ This file tracks tools that are not managed by `pip`.
   command.
 - For Unity packages, pin through the Unity package manifest once the Unity
   project exists.
-

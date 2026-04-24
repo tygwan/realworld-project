@@ -33,4 +33,3 @@ python -m pip install -r requirements/dev.txt
   private `.glb` assets unless explicitly approved.
 - For GPU-specific packages, document the CUDA/driver/runtime assumptions in
   `docs/reference/environment/system-tools.md`.
-

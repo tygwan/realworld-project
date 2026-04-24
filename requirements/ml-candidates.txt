@@ -13,4 +13,3 @@
 # - MonST3R
 # - Nerfstudio / Gaussian Splatting
 # - V-JEPA 2.1 or video-language annotation tools
-
