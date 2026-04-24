@@ -2,7 +2,7 @@
 
 **Date**: 2026-04-24  
 **Task**: Phase 0 environment and asset management  
-**Commit**: pending
+**Commit**: 9d9a09c99940caf52da58c8a497d9ae1b54e9716
 
 ---
 
@@ -52,5 +52,6 @@ link these files and define when the refinery GLB should be used.
 - Heavy ML candidates are tracked but not installed by default.
 - System tools and user assets have registries.
 - Refinery GLB usage is scoped to Phase 3/4 import/proxy validation.
-- Commit hash pending.
-
+- Environment scaffold commit: 9d9a09c99940caf52da58c8a497d9ae1b54e9716
+- Commit hash metadata recorded in a follow-up documentation commit because a
+  git commit cannot contain its own final hash before it exists.
