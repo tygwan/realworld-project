@@ -2,7 +2,7 @@
 
 **Date**: 2026-04-24
 **Task**: refinery schedule mapping investigation
-**Commit**: TBD
+**Commit**: d7c85a78ed6009ba48c9851ca5c37ce8861744a9
 
 ---
 
