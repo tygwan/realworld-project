@@ -45,3 +45,5 @@ observation, not autonomous real-time simulation control.
 - Initial scaffold commit: ae68a0581381e3073839ca7116325653b4201652
 - Commit hash metadata recorded in a follow-up documentation commit because a
   git commit cannot contain its own final hash before it exists.
+- GitHub remote configured: https://github.com/tygwan/realworld-project.git
+- `main` pushed and set to track `origin/main`.

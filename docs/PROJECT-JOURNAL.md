@@ -183,7 +183,7 @@ implementation.
 | Name | Role | URL | Initial Status | Version Pin |
 |------|------|-----|----------------|-------------|
 | dev-standards | Project management/documentation standard | https://github.com/tygwan/dev-standards | Local source available | Local HEAD f98de5e; standard v0.5.0 |
-| realworld-project remote | Project GitHub remote | https://github.com/tygwan/realworld-project.git | Provided by user | Pending first push |
+| realworld-project remote | Project GitHub remote | https://github.com/tygwan/realworld-project.git | Connected; `main` tracks `origin/main` | Initial push completed 2026-04-24 |
 | Coplay Unity Plugin | Unity Editor AI copilot/workflow tool | https://github.com/CoplayDev/coplay-unity-plugin | Candidate | Unpinned; README branch install uses `#beta` |
 | CoplayDev Unity MCP | Unity MCP bridge for editor automation | https://github.com/CoplayDev/unity-mcp | Candidate | Unpinned |
 | SAM 3 | Text-prompted image/video segmentation and tracking | https://github.com/facebookresearch/sam3 | Candidate | Unpinned |
