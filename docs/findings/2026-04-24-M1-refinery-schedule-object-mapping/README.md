@@ -99,11 +99,10 @@ fallback if automatic mapping is insufficient.
 
 ### 4.4 Resolution Commit
 
-Pending.
+Initial finding archived in 7b12d41fa2b4f3af9dc5cebcf82d0b34ca815d2b.
 
 ## 5. References
 
 - Source script: `scripts/inventory_refinery_dataset.py`
 - Analysis: `docs/analysis/2026-04-24-refinery-data-preflight.md`
 - Plan: `docs/plan/2026-04-24-refinery-installation-simulation-plan.md`
-

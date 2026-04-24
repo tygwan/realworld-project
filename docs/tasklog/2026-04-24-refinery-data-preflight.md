@@ -2,7 +2,7 @@
 
 **Date**: 2026-04-24
 **Task**: Phase 0 refinery dataset inventory and readiness check
-**Commit**: pending
+**Commit**: 7b12d41fa2b4f3af9dc5cebcf82d0b34ca815d2b
 
 ---
 
@@ -40,5 +40,7 @@ data layout.
 
 - Unity setup should wait until a small mapped subset is selected.
 - First implementation task should be schedule normalization + mapping coverage.
-- Commit hash pending.
-
+- Refinery data preflight commit:
+  7b12d41fa2b4f3af9dc5cebcf82d0b34ca815d2b
+- Commit hash metadata recorded in a follow-up documentation commit because a
+  git commit cannot contain its own final hash before it exists.
