@@ -2,7 +2,7 @@
 
 **Date**: 2026-04-24  
 **Task**: Phase 0 planning scaffold  
-**Commit**: b9586f39efee279b58c5223789ac7a91ab72ba36
+**Commit**: ae68a0581381e3073839ca7116325653b4201652
 
 ---
 
@@ -42,4 +42,6 @@ observation, not autonomous real-time simulation control.
 - Initial plan written.
 - Initial decisions D1-D3 recorded.
 - External dependency registry initialized.
-- Git commit: b9586f39efee279b58c5223789ac7a91ab72ba36
+- Initial scaffold commit: ae68a0581381e3073839ca7116325653b4201652
+- Commit hash metadata recorded in a follow-up documentation commit because a
+  git commit cannot contain its own final hash before it exists.
