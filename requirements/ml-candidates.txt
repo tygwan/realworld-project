@@ -1,0 +1,16 @@
+# Candidate ML/reconstruction dependencies.
+#
+# This file is a registry, not an install target yet. Many candidates require
+# CUDA-specific wheels, large model weights, or install-from-source steps.
+# Once a candidate is chosen for Phase 1/2, create a dedicated pinned file such
+# as `requirements/reconstruction-colmap-vggt.txt` or document a conda/uv lock.
+
+# Candidate groups to evaluate:
+# - SAM 3 / SAM 3D Objects / SAM 3D Body
+# - COLMAP wrappers or CLI integration
+# - VGGT
+# - DUSt3R / MASt3R
+# - MonST3R
+# - Nerfstudio / Gaussian Splatting
+# - V-JEPA 2.1 or video-language annotation tools
+

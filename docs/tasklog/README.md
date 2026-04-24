@@ -16,4 +16,4 @@ Each completed unit of work should use the 5-section format from
 | Task / Phase | File | Date |
 |--------------|------|------|
 | Initial planning scaffold | [2026-04-24-initial-planning-scaffold.md](2026-04-24-initial-planning-scaffold.md) | 2026-04-24 |
-
+| Environment and asset management scaffold | [2026-04-24-environment-asset-management.md](2026-04-24-environment-asset-management.md) | 2026-04-24 |

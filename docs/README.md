@@ -19,6 +19,12 @@ documents.
 | [findings/](findings/) | Archived issues and evidence |
 | [reference/](reference/) | External references and inherited material |
 
+## Important References
+
+- [Environment requirements](../requirements/README.md)
+- [System tools registry](reference/environment/system-tools.md)
+- [Asset registry](reference/assets/ASSET-REGISTRY.md)
+
 ## Update Rules
 
 - Add a decision record when a structural choice is made.
@@ -26,4 +32,3 @@ documents.
 - Add a finding archive when a technical/data issue is discovered.
 - Keep the project journal current enough that a new collaborator can orient
   from that file alone.
-

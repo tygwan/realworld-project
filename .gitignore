@@ -70,3 +70,18 @@ artifacts/
 exports/
 captures/
 
+# User-provided/private assets stay local unless explicitly approved.
+assets/private/
+assets/user-provided/
+
+# Common large local media/model files.
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.ply
+*.splat
+*.ckpt
+*.safetensors
+*.pth
+*.pt

@@ -38,6 +38,7 @@
 | L1 | Generated images and generated 3D assets cannot be treated as factual site geometry. | Use generated assets only as editable proxies or canonical placeholders. | Accepted |
 | L2 | Video reconstruction output is not automatically physics-ready. | Maintain a separate collider/proxy layer in Unity. | Accepted |
 | L3 | MCP/Coplay tooling is suitable for authoring, not high-frequency runtime control. | Keep runtime behavior inside Unity scripts and explicit simulation components. | Accepted |
+| L4 | The user-provided refinery GLB is unrelated to the construction-site video location. | Use it only for import/proxy sandbox work, not as reconstruction evidence. | Accepted |
 
 ### Design Decisions
 
@@ -46,6 +47,8 @@
 | D1 | Treat AI/MCP/Coplay as environment-authoring tools, not runtime controllers. | 2026-04-24 | [D1](#d1---use-aimcpcoplay-for-authoring-not-runtime-control) |
 | D2 | Separate visual reconstruction from Unity physics proxies. | 2026-04-24 | [D2](#d2---separate-visual-reconstruction-from-physics-proxies) |
 | D3 | Use `dev-standards` as the project management/documentation contract. | 2026-04-24 | [D3](#d3---use-dev-standards-for-project-management) |
+| D4 | Manage environments as layered requirements and registries. | 2026-04-24 | [D4](#d4---manage-environments-as-layered-requirements-and-registries) |
+| D5 | Treat the refinery GLB as an unrelated sandbox/import asset. | 2026-04-24 | [D5](#d5---treat-the-refinery-glb-as-an-unrelated-sandboximport-asset) |
 
 ---
 
@@ -54,6 +57,7 @@
 ```text
 2026-04-24   Initialized planning scaffold with dev-standards@0.5.0.   ae68a05
 2026-04-24   Recorded initial Unity reconstruction/observation plan.     ae68a05
+2026-04-24   Added environment and asset management scaffold.             pending
 ```
 
 ---
@@ -71,6 +75,8 @@ No archived findings yet.
 | D1 | Treat AI/MCP/Coplay as environment-authoring tools, not runtime controllers. | 2026-04-24 | This section |
 | D2 | Separate visual reconstruction from Unity physics proxies. | 2026-04-24 | This section |
 | D3 | Use `dev-standards` as the project management/documentation contract. | 2026-04-24 | This section |
+| D4 | Manage environments as layered requirements and registries. | 2026-04-24 | This section |
+| D5 | Treat the refinery GLB as an unrelated sandbox/import asset. | 2026-04-24 | This section |
 
 ### D1 - Use AI/MCP/Coplay for Authoring, Not Runtime Control
 
@@ -173,6 +179,90 @@ and decision traceability.
 Future phases must update the journal, dependency registry, and task logs as
 part of normal project work.
 
+### D4 - Manage Environments as Layered Requirements and Registries
+
+**Context**:
+The project needs to run in multiple environments, but the stack includes
+lightweight Python scripts, Unity packages, Blender, ffmpeg, COLMAP, GPU-specific
+ML models, and user-provided assets. A single monolithic requirements file would
+force every environment to install heavy model dependencies before the first
+validated pipeline exists.
+
+**Decision**:
+Use layered environment management:
+
+- `requirements/base.txt` for lightweight Python utilities
+- `requirements/dev.txt` for test/lint tooling
+- `requirements/ml-candidates.txt` as a registry for heavyweight candidates
+- `docs/reference/environment/system-tools.md` for non-pip tools
+- `config/environment.example.toml` and `.env.example` for local path/privacy
+  configuration
+- Unity package pins later through the Unity package manifest once the Unity
+  project exists
+
+**Rationale**:
+This keeps the basic setup portable while still making external dependencies
+explicit. Heavy ML/model dependencies can be pinned after a candidate wins a
+Phase 1/2 validation instead of prematurely locking the project to a brittle
+GPU-specific environment.
+
+**Alternatives considered**:
+
+- One large `requirements.txt`: simple, but fragile and likely to fail on
+  machines without the right GPU/runtime stack.
+- Separate conda environments for every candidate now: isolated, but too much
+  maintenance before candidates are selected.
+- Layered requirements plus registries: slightly more documentation work, but
+  clearer and more adaptable.
+
+**Impact**:
+Future implementation should add candidate-specific lock files only after a
+tool is selected. Installation instructions must distinguish base setup from
+heavy reconstruction/model setup.
+
+**Related**:
+- [Environment analysis](analysis/2026-04-24-environment-and-asset-management.md)
+- [Requirements strategy](../requirements/README.md)
+- [System tools registry](reference/environment/system-tools.md)
+
+### D5 - Treat the Refinery GLB as an Unrelated Sandbox/Import Asset
+
+**Context**:
+The user has a refinery facility `.glb` file. The model is not related to the
+location shown in the construction-site video that will drive reconstruction.
+It can still be useful because it is an industrial-scale GLB asset with likely
+material, scale, hierarchy, and collider-proxy challenges.
+
+**Decision**:
+Register the refinery GLB as a user-provided asset but do not commit the binary
+by default. Use it in Phase 3/4 for GLB import, scale/origin normalization,
+material handling, Blender cleanup, collider proxy generation, occlusion volume
+experiments, and a separate refinery sandbox scene.
+
+Do not use it as evidence for the construction-site video reconstruction.
+
+**Rationale**:
+This extracts value from the asset without contaminating the video-based site
+reconstruction workflow. The refinery model can stress-test Unity/Blender import
+and proxy workflows before real site assets are available.
+
+**Alternatives considered**:
+
+- Ignore the GLB entirely: avoids confusion, but misses a useful import/proxy
+  validation asset.
+- Mix the GLB into the main construction-site scene: visually interesting, but
+  technically invalid because it represents a different place.
+- Use it as a separate sandbox asset: useful and cleanly bounded.
+
+**Impact**:
+The asset registry must track its local path and usage boundary once the user
+provides the file location. Phase 3 can use it for import smoke tests; Phase 4
+can use it for collider/occlusion proxy work.
+
+**Related**:
+- [Asset registry](reference/assets/ASSET-REGISTRY.md)
+- [Environment analysis](analysis/2026-04-24-environment-and-asset-management.md)
+
 ---
 
 ## 5. External Dependencies
@@ -200,6 +290,7 @@ implementation.
 | Stable Fast 3D | Fast image-to-3D candidate | https://github.com/Stability-AI/stable-fast-3d | Candidate | Unpinned |
 | Blender | Mesh cleanup, rig/proxy preparation | https://www.blender.org | Required tool candidate | Unpinned |
 | Unity | Interactive environment and physics runtime | https://unity.com | Required platform | Version TBD |
+| User-provided refinery GLB | Unrelated industrial model for import/proxy sandbox validation | Local path TBD; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available from user; not yet linked into repo | Do not commit by default |
 
 ---
 
@@ -212,6 +303,8 @@ implementation.
 | Q3 | What is the privacy boundary for construction-site video and generated frames? | Determines whether cloud tools can be used. | Default to local/offline until user approves otherwise. |
 | Q4 | What minimum fidelity is required for manual observation? | Determines reconstruction quality targets and proxy simplification. | Define MVP acceptance criteria in Phase 1. |
 | Q5 | How should heavy machinery articulation be represented? | Affects rigging, colliders, and user-observed behavior. | Start with simplified articulated prefabs. |
+| Q6 | What is the local path and licensing/usage boundary of the refinery GLB? | Needed before import testing or committing derived assets. | Record in `.env` and asset registry when provided. |
+| Q7 | Which Unity version should be pinned? | Determines package compatibility and reproducibility. | Pin before creating the Unity project. |
 
 ---
 
@@ -221,6 +314,9 @@ implementation.
 |-------------|----------|
 | Project overview | [../README.md](../README.md) |
 | Current implementation plan | [plan/2026-04-24-unity-construction-digital-twin-plan.md](plan/2026-04-24-unity-construction-digital-twin-plan.md) |
+| Environment requirements | [../requirements/README.md](../requirements/README.md) |
+| System tools | [reference/environment/system-tools.md](reference/environment/system-tools.md) |
+| User asset registry | [reference/assets/ASSET-REGISTRY.md](reference/assets/ASSET-REGISTRY.md) |
 | Design decisions | [§4 Decisions](#4-decisions) |
 | External dependency registry | [§5 External Dependencies](#5-external-dependencies) |
 | Task logs | [tasklog/](tasklog/) |

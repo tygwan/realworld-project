@@ -1,0 +1,32 @@
+schema_version = "0.1"
+project_name = "realworld-project"
+
+[privacy]
+allow_cloud_processing = false
+notes = "Raw construction-site video and extracted frames stay local unless the user explicitly approves cloud processing."
+
+[paths]
+data_root = "data"
+raw_video_dir = "data/raw/videos"
+frame_dir = "data/interim/frames"
+mask_dir = "data/interim/masks"
+reconstruction_dir = "artifacts/reconstruction"
+unity_project_dir = "unity"
+asset_dir = "assets"
+
+[tools]
+python = ">=3.11"
+unity = "TBD"
+blender = "TBD"
+ffmpeg = "TBD"
+colmap = "TBD"
+
+[assets.refinery_glb]
+enabled = false
+source_path = ""
+commit_asset_to_git = false
+relationship_to_site_video = "unrelated"
+intended_phase = "Phase 3/4"
+intended_use = "Import pipeline, scale/origin validation, GLB material checks, collider proxy generation, and refinery-specific sandbox scene."
+excluded_use = "Do not use as geometry evidence for the construction-site video reconstruction."
+

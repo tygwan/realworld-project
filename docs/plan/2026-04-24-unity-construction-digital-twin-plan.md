@@ -76,6 +76,10 @@ Physics layer:
    view, blind spots, proximity zones, and scenario behavior.
 10. Findings, limitations, and decisions are recorded using `dev-standards`.
 
+Separately, the user has a refinery facility `.glb` file. That model is
+unrelated to the source video location and should be used as a sandbox/import
+validation asset, not as site reconstruction evidence.
+
 ---
 
 ## 4. Proposed Architecture
@@ -331,6 +335,8 @@ Deliverables:
 - proxy collider layer
 - avatar controller
 - basic camera/raycast visibility system
+- GLB import smoke test using the unrelated refinery facility model, if the
+  user provides the local file path
 
 Decision:
 
@@ -344,6 +350,7 @@ Deliverables:
 - collider proxies
 - simple articulated machine hierarchy
 - Blender cleanup workflow
+- refinery GLB collider/occlusion proxy experiment in a separate sandbox scene
 
 Decision:
 
@@ -434,6 +441,7 @@ Metrics:
 | Tool ecosystem changes quickly | Broken setup | Pin commits/versions and document upgrades |
 | MCP/Coplay actions are hard to reproduce | Hidden project state | Promote stable workflows into scripts once proven |
 | Heavy-machine motion is oversimplified | Misleading safety zone behavior | Start with explicit limitations and refine only where needed |
+| Unrelated refinery GLB is confused with the video site | Invalid conclusions | Keep it in asset registry as unrelated; use only for import/proxy sandbox work |
 
 ---
 
@@ -455,12 +463,14 @@ Default policy:
 
 1. Initialize git and connect the provided GitHub remote.
 2. Select one short sample video for Phase 1.
-3. Create a `data/` layout and artifact naming convention.
-4. Run a reconstruction spike with one baseline and one modern candidate.
-5. Import the first visual layer into Unity.
-6. Build the first simple proxy collider layer.
-7. Add a controllable avatar and basic field-of-view raycasts.
-8. Record the Phase 1 decision in the project journal.
+3. Confirm local environment variables and data paths from `.env.example`.
+4. Create a `data/` layout and artifact naming convention.
+5. Run a reconstruction spike with one baseline and one modern candidate.
+6. Import the first visual layer into Unity.
+7. Build the first simple proxy collider layer.
+8. Add a controllable avatar and basic field-of-view raycasts.
+9. Use the refinery GLB in Phase 3/4 only after the Unity import path exists.
+10. Record the Phase 1 decision in the project journal.
 
 ---
 
@@ -482,4 +492,3 @@ Default policy:
 - Hunyuan3D 2.1: https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1
 - Stable Fast 3D: https://github.com/Stability-AI/stable-fast-3d
 - Unity ArticulationBody: https://docs.unity3d.com/ScriptReference/ArticulationBody.html
-

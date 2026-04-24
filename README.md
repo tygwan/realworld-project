@@ -19,6 +19,22 @@ This project does not target autonomous real-time site control.
 
 - [Implementation plan](docs/plan/2026-04-24-unity-construction-digital-twin-plan.md)
 - [Project journal](docs/PROJECT-JOURNAL.md)
+- [Environment requirements](requirements/README.md)
+- [Asset registry](docs/reference/assets/ASSET-REGISTRY.md)
+
+## Setup Baseline
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements/base.txt
+python -m pip install -r requirements/dev.txt
+```
+
+Heavy ML/reconstruction dependencies are not installed by default. They are
+tracked in [requirements/ml-candidates.txt](requirements/ml-candidates.txt) and
+will be pinned after the first validation slice chooses a candidate.
 
 ## Documentation
 
@@ -29,6 +45,13 @@ This project does not target autonomous real-time site control.
 - [Task Logs](docs/tasklog/) - completed task records
 - [Findings](docs/findings/) - archived issues
 - [Reference](docs/reference/) - external materials and inherited references
+
+## User Assets
+
+The user has a refinery facility `.glb` file. It is unrelated to the
+construction-site video location, so it is tracked as a sandbox/import
+validation asset rather than reconstruction evidence. See
+[ASSET-REGISTRY.md](docs/reference/assets/ASSET-REGISTRY.md).
 
 ## Initial Technology Direction
 
@@ -57,4 +80,3 @@ Key rules:
 - R8: explicit human-AI trade-off checkpoints
 - R9: provenance and reproducibility
 - R10: validation for measurable decisions
-
