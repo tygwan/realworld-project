@@ -70,7 +70,7 @@
 2026-04-24   Added data directory and Unity/WSL file management policy.   06b8b19
 2026-04-24   Inventoried local refinery GLB/CSV dataset and found M1.     7b12d41
 2026-04-24   Reviewed DXTnavis ID logic and added mapping coverage script. d7c85a7
-2026-04-24   Generated 50-GLB high-confidence Unity import subset.         TBD
+2026-04-24   Generated 50-GLB high-confidence Unity import subset.         7de69de
 ```
 
 ---
