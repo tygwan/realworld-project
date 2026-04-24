@@ -18,6 +18,7 @@ This project does not target autonomous real-time site control.
 ## Current Plan
 
 - [Implementation plan](docs/plan/2026-04-24-unity-construction-digital-twin-plan.md)
+- [Refinery installation simulation plan](docs/plan/2026-04-24-refinery-installation-simulation-plan.md)
 - [Project journal](docs/PROJECT-JOURNAL.md)
 - [Environment requirements](requirements/README.md)
 - [Asset registry](docs/reference/assets/ASSET-REGISTRY.md)
@@ -48,10 +49,12 @@ will be pinned after the first validation slice chooses a candidate.
 
 ## User Assets
 
-The user has a refinery facility `.glb` file. It is unrelated to the
-construction-site video location, so it is tracked as a sandbox/import
-validation asset rather than reconstruction evidence. See
-[ASSET-REGISTRY.md](docs/reference/assets/ASSET-REGISTRY.md).
+The user has a refinery facility `.glb` file and a CSV process plan describing
+installation order. These are unrelated to the construction-site video location,
+so they are tracked as a separate refinery sandbox and future 4D installation
+sequencing track rather than reconstruction evidence. See
+[ASSET-REGISTRY.md](docs/reference/assets/ASSET-REGISTRY.md) and the
+[refinery installation simulation plan](docs/plan/2026-04-24-refinery-installation-simulation-plan.md).
 
 ## Initial Technology Direction
 

@@ -18,7 +18,8 @@ asset binaries to be committed.
 
 | ID | Asset | Type | Relationship to Site Video | Git Policy | Intended Use | Phase |
 |----|-------|------|----------------------------|------------|--------------|-------|
-| A1 | User-provided refinery facility model | `.glb` | Unrelated to provided construction-site video | Do not commit by default | Validate GLB import, materials, scale/origin handling, collider proxy generation, and a separate refinery sandbox scene | Phase 3/4 |
+| A1 | User-provided refinery facility model | `.glb` | Unrelated to provided construction-site video | Do not commit by default | Validate GLB import, materials, scale/origin handling, collider proxy generation, separate refinery sandbox scene, and later 4D installation sequencing | Phase 3/4 and Phase 6/7 |
+| A2 | User-provided refinery installation process plan | `.csv` | Unrelated to provided construction-site video | Do not commit by default until approved | Drives object installation order, task timeline, and schedule playback for the refinery sandbox | Phase 6/7 |
 
 ## A1 - User-Provided Refinery Facility GLB
 
@@ -34,6 +35,7 @@ physical location shown in the future construction-site video.
 - collider proxy generation experiments
 - scale/origin/unit normalization experiments
 - separate sandbox scene for refinery-specific observation workflows
+- 4D installation sequencing once paired with the process-plan CSV
 
 **Do not use it for**:
 
@@ -47,5 +49,41 @@ physical location shown in the future construction-site video.
   builder.
 - Phase 4: use it more seriously for collider proxies, occlusion volumes, and
   large industrial facility navigation tests.
-- Optional later branch: create a refinery-specific scenario track if the
-  project expands beyond the construction-site video.
+- Phase 6: pair it with the process-plan CSV for 4D installation playback.
+- Phase 7: add kinematic movement, installer agents, and constructability
+  checks if the data supports those interactions.
+
+## A2 - User-Provided Refinery Installation Process Plan CSV
+
+**Known context**:
+The user has a CSV that describes the installation order for the refinery
+model. The data will be provided when the project reaches the installation
+simulation stage.
+
+**Use it for**:
+
+- schedule-driven object state changes
+- date/sequence slider playback
+- planned installation order visualization
+- object-to-task mapping validation
+- later movement/installer-agent simulation
+
+**Minimum expected columns**:
+
+```csv
+task_id,object_id,task_name,sequence,start_date,end_date,status
+```
+
+**Recommended additional columns**:
+
+```csv
+from_zone,to_zone,installer_type,predecessors,work_package,notes
+```
+
+**Do not use it for**:
+
+- construction-site video reconstruction timing
+- assumptions about the unrelated construction-video location
+
+**Related plan**:
+- [Refinery installation simulation plan](../../plan/2026-04-24-refinery-installation-simulation-plan.md)

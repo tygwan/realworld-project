@@ -39,6 +39,7 @@
 | L2 | Video reconstruction output is not automatically physics-ready. | Maintain a separate collider/proxy layer in Unity. | Accepted |
 | L3 | MCP/Coplay tooling is suitable for authoring, not high-frequency runtime control. | Keep runtime behavior inside Unity scripts and explicit simulation components. | Accepted |
 | L4 | The user-provided refinery GLB is unrelated to the construction-site video location. | Use it only for import/proxy sandbox work, not as reconstruction evidence. | Accepted |
+| L5 | The refinery installation CSV is unrelated to the construction-site video location. | Use it only for the refinery 4D installation sandbox, not as timing evidence for the video site. | Accepted |
 
 ### Design Decisions
 
@@ -49,6 +50,7 @@
 | D3 | Use `dev-standards` as the project management/documentation contract. | 2026-04-24 | [D3](#d3---use-dev-standards-for-project-management) |
 | D4 | Manage environments as layered requirements and registries. | 2026-04-24 | [D4](#d4---manage-environments-as-layered-requirements-and-registries) |
 | D5 | Treat the refinery GLB as an unrelated sandbox/import asset. | 2026-04-24 | [D5](#d5---treat-the-refinery-glb-as-an-unrelated-sandboximport-asset) |
+| D6 | Add a later refinery GLB + CSV 4D installation simulation track. | 2026-04-24 | [D6](#d6---add-a-later-refinery-glb--csv-4d-installation-simulation-track) |
 
 ---
 
@@ -58,6 +60,7 @@
 2026-04-24   Initialized planning scaffold with dev-standards@0.5.0.   ae68a05
 2026-04-24   Recorded initial Unity reconstruction/observation plan.     ae68a05
 2026-04-24   Added environment and asset management scaffold.             9d9a09c
+2026-04-24   Planned refinery GLB + CSV installation simulation track.    pending
 ```
 
 ---
@@ -77,6 +80,7 @@ No archived findings yet.
 | D3 | Use `dev-standards` as the project management/documentation contract. | 2026-04-24 | This section |
 | D4 | Manage environments as layered requirements and registries. | 2026-04-24 | This section |
 | D5 | Treat the refinery GLB as an unrelated sandbox/import asset. | 2026-04-24 | This section |
+| D6 | Add a later refinery GLB + CSV 4D installation simulation track. | 2026-04-24 | This section |
 
 ### D1 - Use AI/MCP/Coplay for Authoring, Not Runtime Control
 
@@ -263,6 +267,49 @@ can use it for collider/occlusion proxy work.
 - [Asset registry](reference/assets/ASSET-REGISTRY.md)
 - [Environment analysis](analysis/2026-04-24-environment-and-asset-management.md)
 
+### D6 - Add a Later Refinery GLB + CSV 4D Installation Simulation Track
+
+**Context**:
+The user clarified that the refinery data includes both a `.glb` model and a
+CSV process plan describing installation order. The user wants to know whether
+Unity can simulate modeled objects moving and being installed according to the
+planned schedule.
+
+**Decision**:
+Add a later refinery-specific 4D installation sequencing track. The track will
+start when the project reaches the installation simulation stage and the user
+provides the GLB and CSV. It will remain separate from the construction-site
+video reconstruction track.
+
+The first target is 4D playback: schedule rows control object visibility,
+color/state, and install sequence. Later targets can add kinematic movement,
+installer agents, crane/forklift abstractions, collision checks, and
+constructability validation.
+
+**Rationale**:
+This captures the value of the refinery data without mixing unrelated geometry
+or schedule assumptions into the video reconstruction workflow. Starting with
+4D playback is the lowest-risk path because it validates object mapping and
+schedule quality before attempting equipment physics.
+
+**Alternatives considered**:
+
+- Keep the refinery GLB as import-only test data: safe, but misses the value of
+  the installation CSV.
+- Build detailed crane physics immediately: expressive, but depends on many
+  unavailable details and could stall the project.
+- Add a staged 4D installation track: validates GLB/CSV usability first, then
+  expands to movement and constructability checks if the data supports it.
+
+**Impact**:
+The refinery track receives its own plan, data requirements, and later phases.
+When the data arrives, the first implementation task is to inspect GLB hierarchy
+and CSV schema, then create or derive an object mapping.
+
+**Related**:
+- [Refinery installation simulation plan](plan/2026-04-24-refinery-installation-simulation-plan.md)
+- [Asset registry](reference/assets/ASSET-REGISTRY.md)
+
 ---
 
 ## 5. External Dependencies
@@ -291,6 +338,7 @@ implementation.
 | Blender | Mesh cleanup, rig/proxy preparation | https://www.blender.org | Required tool candidate | Unpinned |
 | Unity | Interactive environment and physics runtime | https://unity.com | Required platform | Version TBD |
 | User-provided refinery GLB | Unrelated industrial model for import/proxy sandbox validation | Local path TBD; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available from user; not yet linked into repo | Do not commit by default |
+| User-provided refinery installation CSV | Unrelated process plan for refinery 4D installation sequencing | Local path TBD; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available from user later; not yet linked into repo | Do not commit by default |
 
 ---
 
@@ -305,6 +353,8 @@ implementation.
 | Q5 | How should heavy machinery articulation be represented? | Affects rigging, colliders, and user-observed behavior. | Start with simplified articulated prefabs. |
 | Q6 | What is the local path and licensing/usage boundary of the refinery GLB? | Needed before import testing or committing derived assets. | Record in `.env` and asset registry when provided. |
 | Q7 | Which Unity version should be pinned? | Determines package compatibility and reproducibility. | Pin before creating the Unity project. |
+| Q8 | Does the refinery CSV contain stable object IDs that map to GLB nodes? | Determines whether schedule playback can control individual model objects. | Inspect when user provides data at Phase 6. |
+| Q9 | Is the refinery GLB split into installable objects or merged into one mesh? | Determines whether Unity can animate individual installation steps. | Inspect GLB hierarchy before implementing Phase 6. |
 
 ---
 
@@ -314,6 +364,7 @@ implementation.
 |-------------|----------|
 | Project overview | [../README.md](../README.md) |
 | Current implementation plan | [plan/2026-04-24-unity-construction-digital-twin-plan.md](plan/2026-04-24-unity-construction-digital-twin-plan.md) |
+| Refinery installation plan | [plan/2026-04-24-refinery-installation-simulation-plan.md](plan/2026-04-24-refinery-installation-simulation-plan.md) |
 | Environment requirements | [../requirements/README.md](../requirements/README.md) |
 | System tools | [reference/environment/system-tools.md](reference/environment/system-tools.md) |
 | User asset registry | [reference/assets/ASSET-REGISTRY.md](reference/assets/ASSET-REGISTRY.md) |
