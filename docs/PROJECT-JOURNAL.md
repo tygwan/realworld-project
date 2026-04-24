@@ -4,13 +4,14 @@
 > project. This document follows `dev-standards` R1/R4/R6.
 
 **Standards**: dev-standards@0.5.0  
-**Last updated**: 2026-04-24
+**Last updated**: 2026-04-25
 
 ---
 
 ## At a Glance
 
-- **Current phase**: Phase 0/3 bridge - refinery subset prepared for Unity import
+- **Current phase**: Phase 3 - Unity URP project created on Windows-native clone;
+  50-GLB import and schedule playback validation pending.
 - **Project goal**: Build a Unity environment from construction-site video and
   generated/derived 3D assets so a human can directly control a person/avatar
   and observe site conditions.
@@ -19,8 +20,9 @@
 - **Current artifact**:
   [Refinery Unity subset prep](analysis/2026-04-24-refinery-unity-subset-prep.md)
 - **Open findings**: 1 validation-pending mitigation
-- **Next step**: create or open the Windows-native Unity project and import the
-  50-GLB high-confidence refinery subset.
+- **Next step**: pin Unity glTFast in `unity/Packages/manifest.json` and import
+  the 50-GLB high-confidence refinery subset for hierarchy/material/scale and
+  schedule visibility playback validation.
 
 ---
 
@@ -71,6 +73,7 @@
 2026-04-24   Inventoried local refinery GLB/CSV dataset and found M1.     7b12d41
 2026-04-24   Reviewed DXTnavis ID logic and added mapping coverage script. d7c85a7
 2026-04-24   Generated 50-GLB high-confidence Unity import subset.         7de69de
+2026-04-25   Created Unity URP project at unity/ on Windows-native clone.    6e04d25
 ```
 
 ---
@@ -520,7 +523,7 @@ implementation.
 | Hunyuan3D 2.1 | Generative 3D asset candidate | https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1 | Candidate | Unpinned |
 | Stable Fast 3D | Fast image-to-3D candidate | https://github.com/Stability-AI/stable-fast-3d | Candidate | Unpinned |
 | Blender | Mesh cleanup, rig/proxy preparation | https://www.blender.org | Required tool candidate | Unpinned |
-| Unity | Interactive environment and physics runtime | https://unity.com | Required platform; local install observed | `6000.3.4f1` observed locally |
+| Unity | Interactive environment and physics runtime | https://unity.com | Required platform; URP project created in `unity/` (commit `6e04d25`) | `6000.3.4f1` pinned in `unity/ProjectSettings/ProjectVersion.txt` |
 | Unity glTFast | GLB/glTF import candidate for Unity subset | https://docs.unity3d.com/Packages/com.unity.cloud.gltfast@6.14/manual/index.html | Candidate package; Unity release notes list `6.14.1` with 6000.3.4f1 | Pin in Unity `Packages/manifest.json` |
 | User-provided refinery GLB | Unrelated industrial model for import/proxy sandbox validation | Local path in `.env`; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available locally; subset generated | Do not commit by default |
 | User-provided refinery installation CSV | Unrelated process plan for refinery 4D installation sequencing | Local path in `.env`; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available locally; subset generated | Do not commit by default |
@@ -537,10 +540,10 @@ implementation.
 | Q4 | What minimum fidelity is required for manual observation? | Determines reconstruction quality targets and proxy simplification. | Define MVP acceptance criteria in Phase 1. |
 | Q5 | How should heavy machinery articulation be represented? | Affects rigging, colliders, and user-observed behavior. | Start with simplified articulated prefabs. |
 | Q6 | What is the local path and licensing/usage boundary of the refinery GLB? | Needed before import testing or committing derived assets. | Local path is recorded in `.env`; licensing/commit approval still pending. |
-| Q7 | Which Unity version should be pinned? | Determines package compatibility and reproducibility. | Unity `6000.3.4f1` observed locally; pin in Unity project files once created. |
+| Q7 | Which Unity version should be pinned? | Determines package compatibility and reproducibility. | Resolved: Unity `6000.3.4f1` pinned in `unity/ProjectSettings/ProjectVersion.txt` (commit `6e04d25`). |
 | Q8 | Does the refinery CSV contain stable object IDs that map to GLB nodes? | Determines whether schedule playback can control individual model objects. | Not direct IDs; DXTnavis-aware semantic mapping now covers 4,207/4,214 rows. |
 | Q9 | Is the refinery GLB split into installable objects or merged into one mesh? | Determines whether Unity can animate individual installation steps. | Inspect GLB hierarchy before implementing Phase 6. |
-| Q10 | What Windows-native path should host the Unity clone/project? | Needed before creating the Unity project outside WSL. | Choose before Phase 3; example `C:\dev\realworld-project\unity`. |
+| Q10 | What Windows-native path should host the Unity clone/project? | Needed before creating the Unity project outside WSL. | Resolved: `C:\Users\x8333\desktop\AI_PJT\unity\realworld-project\unity` (deviates from D7's `C:\dev\` example; OneDrive Desktop sync may apply — monitor for `Library/` lock or sync conflicts). |
 | Q11 | What local path holds the first Phase 1 test video? | Needed to start construction-video reconstruction spike. | `video/` directory exists but is currently empty. |
 | Q12 | Which 10-50 refinery objects should be used for the first Unity import subset? | Needed to avoid importing 8,656 GLB files immediately. | Answered by `mvp_high_confidence_001`: 9 tasks, 50 object IDs, 50 GLB meshes. |
 
