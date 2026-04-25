@@ -76,7 +76,8 @@
 2026-04-24   Reviewed DXTnavis ID logic and added mapping coverage script. d7c85a7
 2026-04-24   Generated 50-GLB high-confidence Unity import subset.         7de69de
 2026-04-25   Created Unity URP project at unity/ on Windows-native clone.    6e04d25
-2026-04-25   Added refinery material side-channel pipeline (D11).            TBD
+2026-04-25   Added refinery material side-channel pipeline (D11).            60a2a26
+2026-04-25   Pinned Unity glTFast 6.14.1 and added Refinery scaffold.         ce89531
 ```
 
 ---

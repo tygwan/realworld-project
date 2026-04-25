@@ -2,7 +2,7 @@
 
 **Date**: 2026-04-25
 **Task**: D11 / Phase 3 (Unity material assignment)
-**Commit**: TBD
+**Commits**: `60a2a26` (analysis + script + journal), `ce89531` (Unity scaffold + glTFast pin)
 
 ---
 
@@ -82,4 +82,4 @@ Pending user actions on the Windows Unity clone:
 5. Place the 50 GLB prefabs in the scene (drag-import) and press Play —
    pink fallback should be replaced with palette colors.
 
-Commit: TBD.
+Commits: `60a2a26` + `ce89531`.
