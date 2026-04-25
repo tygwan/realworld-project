@@ -4,14 +4,14 @@
 > project. This document follows `dev-standards` R1/R4/R6.
 
 **Standards**: dev-standards@0.5.0  
-**Last updated**: 2026-04-25 (D11)
+**Last updated**: 2026-04-25 (D12)
 
 ---
 
 ## At a Glance
 
-- **Current phase**: Phase 3 - Unity URP project created on Windows-native clone;
-  side-channel material LUT pipeline added; 50-GLB schedule playback validation pending.
+- **Current phase**: Phase 3 - Unity URP project + MCP for Unity bridge active;
+  Claude Code can drive the Editor via MCP; 50-GLB schedule playback validation pending.
 - **Project goal**: Build a Unity environment from construction-site video and
   generated/derived 3D assets so a human can directly control a person/avatar
   and observe site conditions.
@@ -20,10 +20,9 @@
 - **Current artifact**:
   [Refinery Unity subset prep](analysis/2026-04-24-refinery-unity-subset-prep.md)
 - **Open findings**: 1 validation-pending mitigation
-- **Next step**: re-import the correct 50-GLB subset (from
-  `subsets/mvp_high_confidence_001/mesh/`), drop `object_material_lut.json`
-  into `unity/Assets/Refinery/Manifest/`, attach `RefineryMaterialApplier`,
-  then validate hierarchy/scale/material/schedule visibility playback.
+- **Next step**: build a `RefineryScheduleController` MonoBehaviour for
+  9-task visibility playback (D10 next milestone); use the now-active
+  UnityMCP bridge to author and inspect the controller from Claude Code.
 
 ---
 
@@ -61,6 +60,7 @@
 | D9 | Treat refinery schedule `동기화 ID` as a semantic mapping key. | 2026-04-24 | [D9](#d9---treat-refinery-schedule-sync-id-as-a-semantic-mapping-key) |
 | D10 | Use a 50-GLB high-confidence refinery subset as the first Unity import target. | 2026-04-24 | [D10](#d10---use-a-50-glb-high-confidence-refinery-subset-as-the-first-unity-import-target) |
 | D11 | Use a side-channel `AllProperties_*.csv` + System Path domain LUT for Unity material assignment. | 2026-04-25 | [D11](#d11---use-a-side-channel-csv-domain-lut-for-unity-material-assignment) |
+| D12 | Use MCP for Unity standalone (CoplayDev/unity-mcp v9.6.6) instead of the paid Coplay Plugin. | 2026-04-25 | [D12](#d12---use-mcp-for-unity-standalone-instead-of-coplay-plugin) |
 
 ---
 
@@ -78,6 +78,7 @@
 2026-04-25   Created Unity URP project at unity/ on Windows-native clone.    6e04d25
 2026-04-25   Added refinery material side-channel pipeline (D11).            60a2a26
 2026-04-25   Pinned Unity glTFast 6.14.1 and added Refinery scaffold.         ce89531
+2026-04-25   Replaced Coplay Plugin with MCP for Unity standalone (D12).       TBD
 ```
 
 ---
@@ -115,6 +116,7 @@ Archive: [findings/2026-04-24-M1-refinery-schedule-object-mapping/](findings/202
 | D9 | Treat refinery schedule `동기화 ID` as a semantic mapping key. | 2026-04-24 | This section |
 | D10 | Use a 50-GLB high-confidence refinery subset as the first Unity import target. | 2026-04-24 | This section |
 | D11 | Use a side-channel `AllProperties_*.csv` + System Path domain LUT for Unity material assignment. | 2026-04-25 | This section |
+| D12 | Use MCP for Unity standalone (CoplayDev/unity-mcp v9.6.6) instead of the paid Coplay Plugin. | 2026-04-25 | This section |
 
 ### D1 - Use AI/MCP/Coplay for Authoring, Not Runtime Control
 
@@ -553,6 +555,73 @@ DXTnavis.
 - [Refinery material data sources](analysis/2026-04-25-refinery-material-data-sources.md)
 - [Refinery Unity subset prep](analysis/2026-04-24-refinery-unity-subset-prep.md)
 
+### D12 - Use MCP for Unity Standalone Instead of Coplay Plugin
+
+**Context**:
+Two distinct CoplayDev products exist for AI-assisted Unity work:
+
+- **Coplay Unity Plugin** (`CoplayDev/coplay-unity-plugin`): in-Editor chat UI;
+  closed-source DLL distribution; routes LLM calls through Coplay's backend
+  using Coplay credits, independent of any Anthropic subscription.
+- **MCP for Unity** (`CoplayDev/unity-mcp`): MIT-licensed standalone bridge;
+  exposes Unity Editor as MCP tools to external clients (Claude Code, Cursor,
+  VS Code) over stdio or HTTP; the client's existing LLM subscription
+  handles all model usage.
+
+This project's developer holds a Claude Code Max plan; running tasks
+through Coplay's backend would create a parallel paid path and not benefit
+from existing Anthropic billing.
+
+**Decision**:
+Use **MCP for Unity standalone** for all AI-driven Unity automation.
+Reject Coplay Plugin for this project. Register the MCP server in
+Claude Code via `claude mcp add` with stdio transport pointing at the
+Windows-side `uvx mcpforunityserver==9.6.6 mcp-for-unity` command,
+launched through WSL's Win32 interop.
+
+**Rationale**:
+- Cost: stays inside Claude Code Max; no Coplay credits consumed.
+- Open source: MIT package; auditable, forkable.
+- Programmatic surface: 34 tools + 13 resources for asset/scene/script
+  control — broad enough for refinery scene authoring and schedule
+  playback work.
+- Skill-system alignment: Claude Code skills, project memory, and
+  CLAUDE.md guidance all flow through MCP-driven sessions; Plugin
+  bypasses those.
+- Networking: stdio + Win32 interop avoids the WSL2 NAT issue that
+  blocked an HTTP-local server from being reachable across the OS
+  boundary.
+
+**Alternatives considered**:
+
+- Coplay Plugin only: paid billing, closed-source, ignores Claude Code
+  context. Rejected.
+- Plugin + MCP together: Plugin's Pipeline recording was attractive but
+  not worth the divergent billing and the orphaned chat-history folder
+  in `unity/Packages/Coplay/`. Rejected.
+- HTTP transport with Windows server bound to `0.0.0.0`: feasible but
+  exposes the server to LAN; mirrored networking was a cleaner long-term
+  fix but required a WSL restart that interrupted the active session.
+- WSL2 mirrored networking + HTTP-local server: viable; deferred. Stdio
+  via Win32 interop turned out simpler for solo use.
+
+**Impact**:
+- `unity/Packages/manifest.json` pins
+  `com.coplaydev.unity-mcp` (commit `9daf4fc33c33`); `com.coplaydev.coplay`
+  removed.
+- Claude Code registration stored in `~/.claude.json` (local scope) tying
+  the bridge to this project's working directory only.
+- Windows-side `uvx` cache resolves `mcpforunityserver==9.6.6` and a
+  Python virtualenv at
+  `C:\Users\x8333\AppData\Local\uv\cache\archive-v0\VMG_BTXjhymn3B3D0WEfS\`.
+- Bridge listens on `127.0.0.1:6400` (Unity socket) once
+  `Window > MCP For Unity > Toggle MCP Window > Connection: Start` is
+  invoked in the Editor.
+- Plugin chat-history folder `unity/Packages/Coplay/` removed.
+
+**Related**:
+- [Coplay MCP setup tasklog](tasklog/2026-04-25-coplay-mcp-setup.md)
+
 ---
 
 ## 5. External Dependencies
@@ -565,8 +634,8 @@ implementation.
 | dev-standards | Project management/documentation standard | https://github.com/tygwan/dev-standards | Local source available | Local HEAD f98de5e; standard v0.5.0 |
 | realworld-project remote | Project GitHub remote | https://github.com/tygwan/realworld-project.git | Connected; `main` tracks `origin/main` | Initial push completed 2026-04-24 |
 | DXTnavis | Source of refinery export format and schedule ID logic | https://github.com/tygwan/DXTnavis.git | Reviewed for ID mapping semantics | Unpinned; inspected locally 2026-04-24 |
-| Coplay Unity Plugin | Unity Editor AI copilot/workflow tool | https://github.com/CoplayDev/coplay-unity-plugin | Candidate | Unpinned; README branch install uses `#beta` |
-| CoplayDev Unity MCP | Unity MCP bridge for editor automation | https://github.com/CoplayDev/unity-mcp | Candidate | Unpinned |
+| Coplay Unity Plugin | Unity Editor AI copilot/workflow tool | https://github.com/CoplayDev/coplay-unity-plugin | Rejected (D12) — billing model duplicates Claude Code Max | Removed from `unity/Packages/manifest.json` 2026-04-25 |
+| CoplayDev Unity MCP | Unity MCP bridge for editor automation | https://github.com/CoplayDev/unity-mcp | Resolved (D12); pinned in `unity/Packages/manifest.json`; bridge listens on `127.0.0.1:6400` when MCP for Unity Window is open | `9.6.6` (commit `9daf4fc33c33`); registered in Claude Code via `claude mcp add` (local scope, stdio + Win32 interop on `uvx`) |
 | SAM 3 | Text-prompted image/video segmentation and tracking | https://github.com/facebookresearch/sam3 | Candidate | Unpinned |
 | SAM 3D Objects | Single-image/object 3D reconstruction candidate | https://github.com/facebookresearch/sam-3d-objects | Candidate | Unpinned |
 | SAM 3D Body | Human mesh/body reconstruction candidate | https://github.com/facebookresearch/sam-3d-body | Candidate | Unpinned |
@@ -580,7 +649,7 @@ implementation.
 | Hunyuan3D 2.1 | Generative 3D asset candidate | https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1 | Candidate | Unpinned |
 | Stable Fast 3D | Fast image-to-3D candidate | https://github.com/Stability-AI/stable-fast-3d | Candidate | Unpinned |
 | Blender | Mesh cleanup, rig/proxy preparation | https://www.blender.org | Required tool candidate | Unpinned |
-| Unity | Interactive environment and physics runtime | https://unity.com | Required platform; URP project created in `unity/` (commit `6e04d25`) | `6000.3.4f1` pinned in `unity/ProjectSettings/ProjectVersion.txt` |
+| Unity | Interactive environment and physics runtime | https://unity.com | Required platform; URP project created in `unity/` (commit `6e04d25`); Unity Hub auto-upgraded to `6000.4.4f1` during 2026-04-25 setup | `6000.4.4f1` pinned in `unity/ProjectSettings/ProjectVersion.txt` (Coplay packages compatible per `unity: 2021.3` minimum) |
 | Unity glTFast | GLB/glTF import candidate for Unity subset | https://docs.unity3d.com/Packages/com.unity.cloud.gltfast@6.14/manual/index.html | Candidate package; Unity release notes list `6.14.1` with 6000.3.4f1 | Pin in Unity `Packages/manifest.json` |
 | User-provided refinery GLB | Unrelated industrial model for import/proxy sandbox validation | Local path in `.env`; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available locally; subset generated | Do not commit by default |
 | User-provided refinery installation CSV | Unrelated process plan for refinery 4D installation sequencing | Local path in `.env`; see [asset registry](reference/assets/ASSET-REGISTRY.md) | Available locally; subset generated | Do not commit by default |
@@ -592,12 +661,12 @@ implementation.
 | ID | Question | Why it matters | Current handling |
 |----|----------|----------------|------------------|
 | Q1 | Which reconstruction baseline should be validated first: COLMAP, VGGT, MASt3R, or Gaussian Splatting? | Determines the first prototype pipeline and data requirements. | Run a small comparison on one short video. |
-| Q2 | Which Unity automation path should be primary: Coplay Plugin, Coplay MCP, or direct Unity MCP? | Affects reproducibility and editor workflow. | Compare on scene setup tasks. |
+| Q2 | Which Unity automation path should be primary: Coplay Plugin, Coplay MCP, or direct Unity MCP? | Affects reproducibility and editor workflow. | Resolved: MCP for Unity standalone (CoplayDev/unity-mcp v9.6.6) chosen over Coplay Plugin and Coplay MCP per D12 — keeps LLM usage inside Claude Code Max plan. |
 | Q3 | What is the privacy boundary for construction-site video and generated frames? | Determines whether cloud tools can be used. | Default to local/offline until user approves otherwise. |
 | Q4 | What minimum fidelity is required for manual observation? | Determines reconstruction quality targets and proxy simplification. | Define MVP acceptance criteria in Phase 1. |
 | Q5 | How should heavy machinery articulation be represented? | Affects rigging, colliders, and user-observed behavior. | Start with simplified articulated prefabs. |
 | Q6 | What is the local path and licensing/usage boundary of the refinery GLB? | Needed before import testing or committing derived assets. | Local path is recorded in `.env`; licensing/commit approval still pending. |
-| Q7 | Which Unity version should be pinned? | Determines package compatibility and reproducibility. | Resolved: Unity `6000.3.4f1` pinned in `unity/ProjectSettings/ProjectVersion.txt` (commit `6e04d25`). |
+| Q7 | Which Unity version should be pinned? | Determines package compatibility and reproducibility. | Resolved: Unity `6000.4.4f1` pinned in `unity/ProjectSettings/ProjectVersion.txt` (Hub auto-upgraded from `6000.3.4f1` during 2026-04-25 Coplay MCP setup; both Coplay packages compatible per `unity: 2021.3` minimum). |
 | Q8 | Does the refinery CSV contain stable object IDs that map to GLB nodes? | Determines whether schedule playback can control individual model objects. | Not direct IDs; DXTnavis-aware semantic mapping now covers 4,207/4,214 rows. |
 | Q9 | Is the refinery GLB split into installable objects or merged into one mesh? | Determines whether Unity can animate individual installation steps. | Inspect GLB hierarchy before implementing Phase 6. |
 | Q10 | What Windows-native path should host the Unity clone/project? | Needed before creating the Unity project outside WSL. | Resolved: `C:\Users\x8333\desktop\AI_PJT\unity\realworld-project\unity` (deviates from D7's `C:\dev\` example; OneDrive Desktop sync may apply — monitor for `Library/` lock or sync conflicts). |
@@ -621,6 +690,7 @@ implementation.
 | DXTnavis ID logic review | [analysis/2026-04-24-dxtnavis-id-logic-review.md](analysis/2026-04-24-dxtnavis-id-logic-review.md) |
 | Refinery Unity subset prep | [analysis/2026-04-24-refinery-unity-subset-prep.md](analysis/2026-04-24-refinery-unity-subset-prep.md) |
 | Refinery material data sources | [analysis/2026-04-25-refinery-material-data-sources.md](analysis/2026-04-25-refinery-material-data-sources.md) |
+| Coplay MCP setup walkthrough | [tasklog/2026-04-25-coplay-mcp-setup.md](tasklog/2026-04-25-coplay-mcp-setup.md) |
 | Design decisions | [§4 Decisions](#4-decisions) |
 | External dependency registry | [§5 External Dependencies](#5-external-dependencies) |
 | Task logs | [tasklog/](tasklog/) |
