@@ -4,14 +4,14 @@
 > project. This document follows `dev-standards` R1/R4/R6.
 
 **Standards**: dev-standards@0.5.0  
-**Last updated**: 2026-04-25
+**Last updated**: 2026-04-25 (D11)
 
 ---
 
 ## At a Glance
 
 - **Current phase**: Phase 3 - Unity URP project created on Windows-native clone;
-  50-GLB import and schedule playback validation pending.
+  side-channel material LUT pipeline added; 50-GLB schedule playback validation pending.
 - **Project goal**: Build a Unity environment from construction-site video and
   generated/derived 3D assets so a human can directly control a person/avatar
   and observe site conditions.
@@ -20,9 +20,10 @@
 - **Current artifact**:
   [Refinery Unity subset prep](analysis/2026-04-24-refinery-unity-subset-prep.md)
 - **Open findings**: 1 validation-pending mitigation
-- **Next step**: pin Unity glTFast in `unity/Packages/manifest.json` and import
-  the 50-GLB high-confidence refinery subset for hierarchy/material/scale and
-  schedule visibility playback validation.
+- **Next step**: re-import the correct 50-GLB subset (from
+  `subsets/mvp_high_confidence_001/mesh/`), drop `object_material_lut.json`
+  into `unity/Assets/Refinery/Manifest/`, attach `RefineryMaterialApplier`,
+  then validate hierarchy/scale/material/schedule visibility playback.
 
 ---
 
@@ -59,6 +60,7 @@
 | D8 | Run refinery data preflight before Unity project setup. | 2026-04-24 | [D8](#d8---run-refinery-data-preflight-before-unity-project-setup) |
 | D9 | Treat refinery schedule `동기화 ID` as a semantic mapping key. | 2026-04-24 | [D9](#d9---treat-refinery-schedule-sync-id-as-a-semantic-mapping-key) |
 | D10 | Use a 50-GLB high-confidence refinery subset as the first Unity import target. | 2026-04-24 | [D10](#d10---use-a-50-glb-high-confidence-refinery-subset-as-the-first-unity-import-target) |
+| D11 | Use a side-channel `AllProperties_*.csv` + System Path domain LUT for Unity material assignment. | 2026-04-25 | [D11](#d11---use-a-side-channel-csv-domain-lut-for-unity-material-assignment) |
 
 ---
 
@@ -74,6 +76,7 @@
 2026-04-24   Reviewed DXTnavis ID logic and added mapping coverage script. d7c85a7
 2026-04-24   Generated 50-GLB high-confidence Unity import subset.         7de69de
 2026-04-25   Created Unity URP project at unity/ on Windows-native clone.    6e04d25
+2026-04-25   Added refinery material side-channel pipeline (D11).            TBD
 ```
 
 ---
@@ -110,6 +113,7 @@ Archive: [findings/2026-04-24-M1-refinery-schedule-object-mapping/](findings/202
 | D8 | Run refinery data preflight before Unity project setup. | 2026-04-24 | This section |
 | D9 | Treat refinery schedule `동기화 ID` as a semantic mapping key. | 2026-04-24 | This section |
 | D10 | Use a 50-GLB high-confidence refinery subset as the first Unity import target. | 2026-04-24 | This section |
+| D11 | Use a side-channel `AllProperties_*.csv` + System Path domain LUT for Unity material assignment. | 2026-04-25 | This section |
 
 ### D1 - Use AI/MCP/Coplay for Authoring, Not Runtime Control
 
@@ -496,6 +500,58 @@ setup, and a smoke-test scene that reads `unity_subset_manifest.json`.
 - [Refinery Unity subset prep](analysis/2026-04-24-refinery-unity-subset-prep.md)
 - [Asset registry](reference/assets/ASSET-REGISTRY.md)
 
+### D11 - Use a Side-Channel CSV Domain LUT for Unity Material Assignment
+
+**Context**:
+DXTnavis-generated GLBs in the refinery dataset contain only geometry
+(`POSITION` + `NORMAL`); no materials, textures, or vertex colors are
+exported. Imported under URP, all 50 MVP GLBs render as the URP
+"missing-shader" pink fallback. The refinery dataset does ship rich
+SmartPlant 3D properties via `AllProperties_*.csv`, including
+`Material`, `System Path`, `Name`, and equipment type columns.
+
+**Decision**:
+Build a per-`ObjectId` material lookup table from
+`AllProperties_*.csv` and `geometry.csv` and load it into Unity at runtime
+through a `RefineryMaterialApplier` MonoBehaviour. The LUT applies a
+two-tier resolution rule:
+
+1. If `SmartPlant 3D|Material` is set, map by material name (Steel - Carbon,
+   Concrete, Cementitious, Fibrous).
+2. Otherwise, infer a domain bucket from `Name` and `System Path` keywords
+   (Pipe, PipeFitting, Valve, Structure, Civil, Equipment, Insulation,
+   Unknown).
+
+A versioned palette (`palette_version: 0.1`) maps each bucket to a hex color.
+
+**Rationale**:
+The DXTnavis output is intentionally geometry-only and modifying its export
+would not raise material coverage above the source-data ceiling
+(~28% explicit material in the full 12,009-row dataset; 0% in this
+piping-heavy MVP subset). A side-channel LUT covers 50/50 of the MVP
+subset with meaningful color distinction, requires only a Python script
+plus a small MonoBehaviour, and keeps the GLB pipeline untouched.
+
+**Alternatives considered**:
+
+- Explicit `Material` only: works for civil/structural-heavy datasets but
+  yields 0/50 here.
+- Modify DXTnavis to embed glTF materials: heavy (.NET build, Navisworks,
+  re-export) and capped by the same source-data ceiling.
+- Single neutral grey for everything: trivial but loses semantic separation
+  needed for schedule playback validation.
+
+**Impact**:
+Adds `scripts/build_refinery_material_lut.py` and the Unity
+`RefineryMaterialApplier` script. The LUT JSON is generated next to
+`unity_subset_manifest.json` and is local-payload (not committed). Future
+visualization revisions bump `palette_version` rather than rerunning
+DXTnavis.
+
+**Related**:
+- [Refinery material data sources](analysis/2026-04-25-refinery-material-data-sources.md)
+- [Refinery Unity subset prep](analysis/2026-04-24-refinery-unity-subset-prep.md)
+
 ---
 
 ## 5. External Dependencies
@@ -563,6 +619,7 @@ implementation.
 | Refinery preflight analysis | [analysis/2026-04-24-refinery-data-preflight.md](analysis/2026-04-24-refinery-data-preflight.md) |
 | DXTnavis ID logic review | [analysis/2026-04-24-dxtnavis-id-logic-review.md](analysis/2026-04-24-dxtnavis-id-logic-review.md) |
 | Refinery Unity subset prep | [analysis/2026-04-24-refinery-unity-subset-prep.md](analysis/2026-04-24-refinery-unity-subset-prep.md) |
+| Refinery material data sources | [analysis/2026-04-25-refinery-material-data-sources.md](analysis/2026-04-25-refinery-material-data-sources.md) |
 | Design decisions | [§4 Decisions](#4-decisions) |
 | External dependency registry | [§5 External Dependencies](#5-external-dependencies) |
 | Task logs | [tasklog/](tasklog/) |
