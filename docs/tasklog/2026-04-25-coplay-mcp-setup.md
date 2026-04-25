@@ -2,7 +2,7 @@
 
 **Date**: 2026-04-25
 **Task**: D12 / Phase 3 (Unity automation bridge)
-**Commit**: TBD
+**Commit**: `7f1f024`
 
 ---
 
@@ -119,4 +119,4 @@ Unresolved / deferred:
   Windows-side and not loaded by the WSL Claude Code session;
   intentionally ignored.
 
-Commit: TBD.
+Commit: `7f1f024`.

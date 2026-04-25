@@ -78,7 +78,7 @@
 2026-04-25   Created Unity URP project at unity/ on Windows-native clone.    6e04d25
 2026-04-25   Added refinery material side-channel pipeline (D11).            60a2a26
 2026-04-25   Pinned Unity glTFast 6.14.1 and added Refinery scaffold.         ce89531
-2026-04-25   Replaced Coplay Plugin with MCP for Unity standalone (D12).       TBD
+2026-04-25   Replaced Coplay Plugin with MCP for Unity standalone (D12).       7f1f024
 ```
 
 ---
